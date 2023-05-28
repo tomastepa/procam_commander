@@ -1,6 +1,7 @@
 import 'package:procam_commander/models/projector.dart';
 
 import './screens/home.dart';
+import 'models/camera.dart';
 import 'screens/projector_screen.dart';
 import 'screens/camera_screen.dart';
 import './screens/settings.dart';
@@ -15,7 +16,6 @@ import 'package:url_launcher/link.dart';
 import 'package:window_manager/window_manager.dart';
 // import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
-import 'routes/devices.dart' deferred as devices;
 import 'routes/forms.dart' deferred as forms;
 import 'routes/inputs.dart' deferred as inputs;
 import 'routes/navigation.dart' deferred as navigation;
@@ -69,6 +69,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (cotext) => Projector()),
+        ChangeNotifierProvider(create: (cotext) => Camera()),
       ],
       child: const MyApp(),
     ),
@@ -517,10 +518,9 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     _LinkPaneItemAction(
       icon: const Icon(FluentIcons.open_source),
       title: const Text('Source code'),
-      link: 'https://github.com/bdlukaa/fluent_ui',
+      link: 'https://github.com/tomastepa/procam_commander',
       body: const SizedBox.shrink(),
     ),
-    // TODO: mobile widgets, Scrollbar, BottomNavigationBar, RatingBar
   ];
 
   @override
