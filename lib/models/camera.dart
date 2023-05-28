@@ -10,6 +10,8 @@ class Camera extends ChangeNotifier {
   }
 
   void fetchPresets() async {
+    List<Preset> presets = [];
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? position = prefs.getInt('defaultCameraPosition');
     if (position != null && position > 0) {
@@ -58,6 +60,7 @@ class Camera extends ChangeNotifier {
       );
     }
 
+    _presets = presets;
     notifyListeners();
   }
 

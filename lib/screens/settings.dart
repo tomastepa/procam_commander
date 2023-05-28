@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart' as ms_icons;
 
+import '../models/camera.dart';
 import '../theme.dart';
 import '../widgets/page.dart';
 import '../widgets/list_card.dart';
@@ -75,41 +76,44 @@ class _SettingsPageState extends State<SettingsPage> with PageMixin {
     _saveValue('ipProjector', _ipProjector);
   }
 
-  void _savePosition(String position, int? value) async {
+  void _savePreset(String position, int? value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     if (value == null) {
       prefs.remove(position);
       // print('Deleted Position: $position');
-      return;
+    } else {
+      prefs.setInt(position, value);
+      // print('Saved Position: $position $value');
     }
-
-    prefs.setInt(position, value);
-    // print('Saved Position: $position $value');
   }
 
-  void _savePositionDefault(int? value) {
+  void _savePresetDefault(int? value) {
     if (_defaultPosition == value) return;
-    _savePosition('defaultCameraPosition', value);
+    _savePreset('defaultCameraPosition', value);
     setState(() => _defaultPosition = value);
+    Provider.of<Camera>(context, listen: false).fetchPresets();
   }
 
-  void _savePositionSpeaker(int? value) {
+  void _savePresetSpeaker(int? value) {
     if (_speakerPosition == value) return;
-    _savePosition('speakerCameraPosition', value);
+    _savePreset('speakerCameraPosition', value);
     setState(() => _speakerPosition = value);
+    Provider.of<Camera>(context, listen: false).fetchPresets();
   }
 
-  void _savePositionReader(int? value) {
+  void _savePresetReader(int? value) {
     if (_readerPosition == value) return;
-    _savePosition('readerCameraPosition', value);
+    _savePreset('readerCameraPosition', value);
     setState(() => _readerPosition = value);
+    Provider.of<Camera>(context, listen: false).fetchPresets();
   }
 
-  void _savePositionStudentAssignment(int? value) {
+  void _savePresetStudentAssignment(int? value) {
     if (_studentAssignmentPosition == value) return;
-    _savePosition('studentAssignmentCameraPosition', value);
+    _savePreset('studentAssignmentCameraPosition', value);
     setState(() => _studentAssignmentPosition = value);
+    Provider.of<Camera>(context, listen: false).fetchPresets();
   }
 
   @override
@@ -281,7 +285,7 @@ class _SettingsPageState extends State<SettingsPage> with PageMixin {
                 child: NumberBox(
                   mode: SpinButtonPlacementMode.inline,
                   value: _defaultPosition,
-                  onChanged: _savePositionDefault,
+                  onChanged: _savePresetDefault,
                   min: 1,
                   max: 255,
                 ),
@@ -311,7 +315,7 @@ class _SettingsPageState extends State<SettingsPage> with PageMixin {
                 child: NumberBox(
                   mode: SpinButtonPlacementMode.inline,
                   value: _speakerPosition,
-                  onChanged: _savePositionSpeaker,
+                  onChanged: _savePresetSpeaker,
                   min: 1,
                   max: 255,
                 ),
@@ -341,7 +345,7 @@ class _SettingsPageState extends State<SettingsPage> with PageMixin {
                 child: NumberBox(
                   mode: SpinButtonPlacementMode.inline,
                   value: _readerPosition,
-                  onChanged: _savePositionReader,
+                  onChanged: _savePresetReader,
                   min: 1,
                   max: 255,
                 ),
@@ -372,7 +376,7 @@ class _SettingsPageState extends State<SettingsPage> with PageMixin {
                   mode: SpinButtonPlacementMode.inline,
                   value: _studentAssignmentPosition,
                   // focusNode: _ipProjectorFocusNode,
-                  onChanged: _savePositionStudentAssignment,
+                  onChanged: _savePresetStudentAssignment,
                   min: 1,
                   max: 255,
                 ),

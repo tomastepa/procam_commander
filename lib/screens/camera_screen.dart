@@ -14,6 +14,9 @@ class CameraScreen extends StatefulWidget with PageMixin {
 }
 
 class _CameraScreenState extends State<CameraScreen> {
+  final spacer = const SizedBox(height: 10.0);
+  final biggerSpacer = const SizedBox(height: 40.0);
+
   @override
   Widget build(BuildContext context) {
     final cameraModel = Provider.of<Camera>(context);
@@ -22,6 +25,7 @@ class _CameraScreenState extends State<CameraScreen> {
       header: const PageHeader(title: Text('Kamera')),
       children: [
         Text('Presets', style: FluentTheme.of(context).typography.subtitle),
+        spacer,
         ListCard(
           child: Container(
             // height: 400,
