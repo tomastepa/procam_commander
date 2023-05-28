@@ -1,11 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:url_launcher/link.dart';
+// import 'package:url_launcher/link.dart';
 
-import '../models/sponsor.dart';
-import '../widgets/changelog.dart';
-import '../widgets/material_equivalents.dart';
+// import '../models/sponsor.dart';
+// import '../widgets/changelog.dart';
+// import '../widgets/material_equivalents.dart';
 import '../widgets/page.dart';
-import '../widgets/sponsor.dart';
+// import '../widgets/sponsor.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> with PageMixin {
     // assert(debugCheckHasFluentTheme(context));
     // final theme = FluentTheme.of(context);
 
-    return Placeholder();
+    return const Placeholder();
 
     //   return ScaffoldPage.scrollable(
     //     header: PageHeader(

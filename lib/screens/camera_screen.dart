@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import '../../widgets/page.dart';
 import '../models/camera.dart';
-import '../routes/surfaces.dart';
 
 class CameraScreen extends StatefulWidget with PageMixin {
   const CameraScreen({super.key});
