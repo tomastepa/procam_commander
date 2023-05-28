@@ -1,0 +1,1 @@
+class MissingParameterException implements Exception {}
