@@ -10,20 +10,20 @@ This repository contains a program for controlling a projector and a camera. Ple
 
 ## Disclaimer:
 
-    This program is provided as-is, without any warranty or support.
-    The author cannot be held liable for any consequences or damages arising from the use of this code.
-    It is recommended to thoroughly test the program and ensure its compatibility with your specific projector and camera models.
+This program is provided as-is, without any warranty or support.
+The author cannot be held liable for any consequences or damages arising from the use of this code.
+It is recommended to thoroughly test the program and ensure its compatibility with your specific projector and camera models.
 
 ## Features
 
-    Control the projector: The program provides functionality to control various aspects of the projector, such as power on/off, input selection, volume control, etc.
-    Control the camera: You can use the program to control the camera settings, capture images, and perform other camera-related operations.
-    Simple and intuitive interface: The program offers an easy-to-use interface for interacting with the projector and camera.
+Control the projector: The program provides functionality to control various aspects of the projector, such as power on/off, input selection, volume control, etc.
+Control the camera: You can use the program to control the camera settings, capture images, and perform other camera-related operations.
+Simple and intuitive interface: The program offers an easy-to-use interface for interacting with the projector and camera.
 
 ## Requirements
 
-    Projector: Make sure your projector is compatible with the program. Check the documentation or specifications of your projector model for compatibility details.
-    Camera: Ensure that your camera is supported by the program. Refer to the camera's documentation or specifications to verify compatibility.
+Projector: Make sure your projector is compatible with the program. Check the documentation or specifications of your projector model for compatibility details.
+Camera: Ensure that your camera is supported by the program. Refer to the camera's documentation or specifications to verify compatibility.
 
 ## Usage
 
@@ -43,9 +43,9 @@ This program is released under the MIT License. Please review the license file f
 
 ## Disclaimer
 
-    This program is provided as-is, without any warranty or support.
-    The author cannot be held liable for any consequences or damages arising from the use of this code.
-    It is recommended to thoroughly test the program and ensure its compatibility with your specific projector and camera models.
+This program is provided as-is, without any warranty or support.
+The author cannot be held liable for any consequences or damages arising from the use of this code.
+It is recommended to thoroughly test the program and ensure its compatibility with your specific projector and camera models.
 
 ## Contact
 
