@@ -46,6 +46,3 @@ It is recommended to thoroughly test the program and ensure its compatibility wi
 For any inquiries or issues, please create a GitHub issue in this repository. However, please note that no active support or maintenance is provided for this project.
 
 **Important:** If you encounter any errors or issues, please be aware that there may not be a resolution or fix available. Use this program at your own risk.
-Acknowledgements
-
-This program was inspired by the need for controlling projectors and cameras in various scenarios. We thank the open-source community for their contributions and resources that helped in the development of this program.
