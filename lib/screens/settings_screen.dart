@@ -10,14 +10,14 @@ import '../theme.dart';
 import '../widgets/page.dart';
 import '../widgets/list_card.dart';
 
-class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+class SettingsScreen extends StatefulWidget {
+  const SettingsScreen({super.key});
 
   @override
-  State<SettingsPage> createState() => _SettingsPageState();
+  State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsPageState extends State<SettingsPage> with PageMixin {
+class _SettingsScreenState extends State<SettingsScreen> with PageMixin {
   final spacer = const SizedBox(height: 10.0);
   final biggerSpacer = const SizedBox(height: 40.0);
 
