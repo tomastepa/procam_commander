@@ -34,18 +34,18 @@ class AppTheme extends ChangeNotifier {
     notifyListeners();
   }
 
-  // void setEffect(WindowEffect effect, BuildContext context) {
-  //   Window.setEffect(
-  //     effect: effect,
-  //     color: [
-  //       WindowEffect.solid,
-  //       WindowEffect.acrylic,
-  //     ].contains(effect)
-  //         ? FluentTheme.of(context).micaBackgroundColor.withOpacity(0.05)
-  //         : Colors.transparent,
-  //     dark: FluentTheme.of(context).brightness.isDark,
-  //   );
-  // }
+  void setEffect(WindowEffect effect, BuildContext context) {
+    Window.setEffect(
+      effect: effect,
+      color: [
+        WindowEffect.solid,
+        WindowEffect.acrylic,
+      ].contains(effect)
+          ? FluentTheme.of(context).micaBackgroundColor.withOpacity(0.05)
+          : Colors.transparent,
+      dark: FluentTheme.of(context).brightness.isDark,
+    );
+  }
 
   TextDirection _textDirection = TextDirection.ltr;
   TextDirection get textDirection => _textDirection;

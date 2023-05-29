@@ -176,6 +176,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         if (router.location != '/') router.pushNamed('home');
       },
     ),
+    PaneItemHeader(header: const Text('Geräte')),
     PaneItem(
       key: const Key('/projector'),
       icon: const Icon(FluentIcons.screen),

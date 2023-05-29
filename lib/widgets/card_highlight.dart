@@ -94,7 +94,7 @@ class _CardHighlightState extends State<CardHighlight>
             : null,
         header: const Text('Source code'),
         content: SyntaxView(
-          code: widget.codeSnippet,
+          code: 'Dummy Code', // widget.codeSnippet,
           syntaxTheme: theme.brightness.isDark
               ? SyntaxTheme.vscodeDark()
               : SyntaxTheme.vscodeLight(),
