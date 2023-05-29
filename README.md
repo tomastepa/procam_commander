@@ -8,12 +8,6 @@
 
 This repository contains a program for controlling a projector and a camera. Please note that the code is in an early development state and may not be stable. Use it at your own risk.
 
-## Disclaimer:
-
-This program is provided as-is, without any warranty or support.
-The author cannot be held liable for any consequences or damages arising from the use of this code.
-It is recommended to thoroughly test the program and ensure its compatibility with your specific projector and camera models.
-
 ## Features
 
 Control the projector: The program provides functionality to control various aspects of the projector, such as power on/off, input selection, volume control, etc.
