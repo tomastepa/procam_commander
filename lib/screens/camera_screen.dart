@@ -16,6 +16,8 @@ class _CameraScreenState extends State<CameraScreen> {
   final spacer = const SizedBox(height: 10.0);
   final biggerSpacer = const SizedBox(height: 40.0);
 
+  PresetId? selectedPresetId;
+
   @override
   Widget build(BuildContext context) {
     final cameraModel = Provider.of<Camera>(context);
@@ -44,10 +46,10 @@ class _CameraScreenState extends State<CameraScreen> {
                 return ListTile.selectable(
                   leading: preset.icon,
                   title: Text(preset.title),
-                  // selected: firstSelected == contact,
-                  // onSelectionChange: (v) {
-                  //   setState(() => firstSelected = contact);
-                  // },
+                  selected: selectedPresetId == preset.id,
+                  onSelectionChange: (v) {
+                    setState(() => selectedPresetId = preset.id);
+                  },
                 );
               },
             ),

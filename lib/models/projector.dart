@@ -16,6 +16,7 @@ class Projector extends ChangeNotifier {
   void turnOff() async {
     apiClient.turnOff();
     _isPowerOn = false;
+    _isAvMuteOn = false;
     notifyListeners();
   }
 

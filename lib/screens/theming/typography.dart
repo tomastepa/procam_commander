@@ -1,7 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-import '../settings.dart';
-
 class TypographyPage extends StatefulWidget {
   const TypographyPage({super.key});
 

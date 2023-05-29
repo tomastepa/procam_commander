@@ -44,7 +44,6 @@ class _ProjectorScreenState extends State<ProjectorScreen> with PageMixin {
                     checked: projectorModel.isPowerOn,
                     onChanged: (b) => setState(() {
                       b ? projectorModel.turnOn() : projectorModel.turnOff();
-                      // powerOn == false ? avMuteOn = false : null;
                     }),
                     leadingContent: true,
                     content: Text(projectorModel.isPowerOn ? 'An' : 'Aus'),
@@ -77,13 +76,17 @@ class _ProjectorScreenState extends State<ProjectorScreen> with PageMixin {
                 child: Container(
                   alignment: Alignment.centerRight,
                   child: ToggleSwitch(
-                    checked: avMuteOn,
+                    checked: projectorModel.isAvMuteOn,
                     // disable ToggleSwitch for AV Mute if power is off
                     onChanged: !projectorModel.isPowerOn
                         ? null
-                        : (v) => setState(() => avMuteOn = v),
+                        : (b) => setState(() {
+                              b
+                                  ? projectorModel.avMuteOn()
+                                  : projectorModel.avMuteOff();
+                            }),
                     leadingContent: true,
-                    content: Text(avMuteOn ? 'An' : 'Aus'),
+                    content: Text(projectorModel.isAvMuteOn ? 'An' : 'Aus'),
                   ),
                 ),
               ),
