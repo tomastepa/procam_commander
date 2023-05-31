@@ -15,9 +15,9 @@ import 'package:system_theme/system_theme.dart';
 import 'package:url_launcher/link.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'routes/devices.dart' deferred as devices;
+// import 'routes/devices.dart' deferred as devices;
 import 'theme.dart';
-import 'widgets/deferred_widget.dart';
+// import 'widgets/deferred_widget.dart';
 
 const String appTitle = 'ProCam Commander';
 
@@ -62,9 +62,9 @@ void main() async {
     ),
   );
 
-  Future.wait([
-    DeferredWidget.preload(devices.loadLibrary),
-  ]);
+  // Future.wait([
+  //   DeferredWidget.preload(devices.loadLibrary),
+  // ]);
 }
 
 class MyApp extends StatelessWidget {
@@ -144,9 +144,9 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   // int index = 0;
 
   final viewKey = GlobalKey(debugLabel: 'Navigation View Key');
-  final searchKey = GlobalKey(debugLabel: 'Search Bar Key');
-  final searchFocusNode = FocusNode();
-  final searchController = TextEditingController();
+  // final searchKey = GlobalKey(debugLabel: 'Search Bar Key');
+  // final searchFocusNode = FocusNode();
+  // final searchController = TextEditingController();
 
   final List<NavigationPaneItem> originalItems = [
     PaneItem(
@@ -212,8 +212,8 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   @override
   void dispose() {
     windowManager.removeListener(this);
-    searchController.dispose();
-    searchFocusNode.dispose();
+    // searchController.dispose();
+    // searchFocusNode.dispose();
     super.dispose();
   }
 
@@ -291,12 +291,12 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           );
         }(),
         title: () {
-          if (kIsWeb) {
-            return const Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: Text(appTitle),
-            );
-          }
+          // if (kIsWeb) {
+          //   return const Align(
+          //     alignment: AlignmentDirectional.centerStart,
+          //     child: Text(appTitle),
+          //   );
+          // }
           return const DragToMoveArea(
             child: Align(
               alignment: AlignmentDirectional.centerStart,
@@ -326,9 +326,9 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         items: originalItems,
         footerItems: footerItems,
       ),
-      onOpenSearch: () {
-        searchFocusNode.requestFocus();
-      },
+      // onOpenSearch: () {
+      //   searchFocusNode.requestFocus();
+      // },
     );
   }
 
@@ -428,9 +428,9 @@ final router = GoRouter(
       navigatorKey: _shellNavigatorKey,
       builder: (context, state, child) {
         return MyHomePage(
-          child: child,
           shellContext: _shellNavigatorKey.currentContext,
           state: state,
+          child: child,
         );
       },
       routes: [

@@ -25,20 +25,28 @@ class _SettingsScreenState extends State<SettingsScreen> with PageMixin {
 
   final TextEditingController _userProjectorTextController =
       TextEditingController();
-  final TextEditingController _passwordProjecotrTextController =
+  final TextEditingController _passwordProjectorTextController =
       TextEditingController();
   final TextEditingController _ipProjectorTextController =
       TextEditingController();
   final TextEditingController _ipCameraTextController = TextEditingController();
+  final TextEditingController _userCameraTextController =
+      TextEditingController();
+  final TextEditingController _passwordCameraTextController =
+      TextEditingController();
 
   late final FocusNode _ipProjectorFocusNode;
   late final FocusNode _ipCameraFocusNode;
   late final FocusNode _userProjectorFocusNode;
   late final FocusNode _passwordProjectorFocusNode;
+  late final FocusNode _userCameraFocusNode;
+  late final FocusNode _passwordCameraFocusNode;
 
   String _userProjector = '';
   String _passwordProjector = '';
   String _ipProjector = '';
+  String _userCamera = '';
+  String _passwordCamera = '';
   String _ipCamera = '';
   int? _defaultPosition,
       _speakerPosition,
@@ -56,9 +64,20 @@ class _SettingsScreenState extends State<SettingsScreen> with PageMixin {
       _userProjector = _userProjectorTextController.text;
       _saveValue('userProjector', _userProjector);
     }
-    if (_passwordProjecotrTextController.text != _passwordProjector) {
-      _passwordProjector = _passwordProjecotrTextController.text;
+    if (_passwordProjectorTextController.text != _passwordProjector) {
+      _passwordProjector = _passwordProjectorTextController.text;
       _saveValue('passwordProjector', _passwordProjector);
+    }
+  }
+
+  void _saveCredentialsCamera() {
+    if (_userCameraTextController.text != _userCamera) {
+      _userCamera = _userCameraTextController.text;
+      _saveValue('userCamera', _userCamera);
+    }
+    if (_passwordCameraTextController.text != _passwordCamera) {
+      _passwordCamera = _passwordCameraTextController.text;
+      _saveValue('passwordCamera', _passwordCamera);
     }
   }
 
@@ -81,10 +100,8 @@ class _SettingsScreenState extends State<SettingsScreen> with PageMixin {
 
     if (value == null) {
       prefs.remove(position);
-      // print('Deleted Position: $position');
     } else {
       prefs.setInt(position, value);
-      // print('Saved Position: $position $value');
     }
   }
 
@@ -122,22 +139,31 @@ class _SettingsScreenState extends State<SettingsScreen> with PageMixin {
     _userProjectorFocusNode = FocusNode();
     _passwordProjectorFocusNode = FocusNode();
     _ipCameraFocusNode = FocusNode();
+    _userCameraFocusNode = FocusNode();
+    _passwordCameraFocusNode = FocusNode();
     _ipProjectorFocusNode = FocusNode();
 
     _userProjectorFocusNode.addListener(_saveCredentialsProjector);
     _passwordProjectorFocusNode.addListener(_saveCredentialsProjector);
     _ipCameraFocusNode.addListener(_saveIpCamera);
+    _userCameraFocusNode.addListener(_saveCredentialsCamera);
+    _passwordCameraFocusNode.addListener(_saveCredentialsCamera);
     _ipProjectorFocusNode.addListener(_saveIpProjector);
 
     _prefs.then((SharedPreferences prefs) {
       _userProjector = prefs.getString('userProjector') ?? '';
       _userProjectorTextController.text = _userProjector;
       _passwordProjector = prefs.getString('passwordProjector') ?? '';
-      _passwordProjecotrTextController.text = _passwordProjector;
-      _ipCamera = prefs.getString('ipCamera') ?? '';
-      _ipCameraTextController.text = _ipCamera;
+      _passwordProjectorTextController.text = _passwordProjector;
       _ipProjector = prefs.getString('ipProjector') ?? '';
       _ipProjectorTextController.text = _ipProjector;
+
+      _userCamera = prefs.getString('userCamera') ?? '';
+      _userCameraTextController.text = _userCamera;
+      _passwordCamera = prefs.getString('passwordCamera') ?? '';
+      _passwordCameraTextController.text = _passwordProjector;
+      _ipCamera = prefs.getString('ipCamera') ?? '';
+      _ipCameraTextController.text = _ipCamera;
 
       setState(() {
         _defaultPosition = prefs.getInt('defaultCameraPosition');
@@ -155,14 +181,20 @@ class _SettingsScreenState extends State<SettingsScreen> with PageMixin {
     _passwordProjectorFocusNode.removeListener(_saveCredentialsProjector);
     _ipCameraFocusNode.removeListener(_saveIpCamera);
     _ipProjectorFocusNode.removeListener(_saveIpProjector);
+    _userCameraFocusNode.removeListener(_saveCredentialsCamera);
+    _passwordCameraFocusNode.removeListener(_saveCredentialsCamera);
     _userProjectorFocusNode.dispose();
     _passwordProjectorFocusNode.dispose();
     _ipCameraFocusNode.dispose();
     _ipProjectorFocusNode.dispose();
+    _userCameraFocusNode.dispose();
+    _passwordCameraFocusNode.dispose();
     _userProjectorTextController.dispose();
-    _passwordProjecotrTextController.dispose();
+    _passwordProjectorTextController.dispose();
     _ipCameraTextController.dispose();
     _ipProjectorTextController.dispose();
+    _userCameraTextController.dispose();
+    _passwordCameraTextController.dispose();
     super.dispose();
   }
 
@@ -230,7 +262,7 @@ class _SettingsScreenState extends State<SettingsScreen> with PageMixin {
                   placeholder: 'Passwort',
                   revealMode: PasswordRevealMode.hidden,
                   focusNode: _passwordProjectorFocusNode,
-                  controller: _passwordProjecotrTextController,
+                  controller: _passwordProjectorTextController,
                 ),
               ),
             ],
@@ -250,6 +282,48 @@ class _SettingsScreenState extends State<SettingsScreen> with PageMixin {
         ),
         spacer,
         Text('Kamera', style: FluentTheme.of(context).typography.bodyStrong),
+        spacer,
+        ListCard(
+          child: Row(
+            children: [
+              const Icon(ms_icons.FluentIcons.password_24_regular),
+              const SizedBox(width: 10.0),
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Anmeldedaten',
+                    textAlign: TextAlign.start,
+                  ),
+                ],
+              ),
+              Expanded(
+                child: Container(),
+              ),
+              SizedBox(
+                width: 150,
+                child: TextBox(
+                  placeholder: 'Benutzername',
+                  expands: false,
+                  focusNode: _userCameraFocusNode,
+                  controller: _userCameraTextController,
+                ),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              SizedBox(
+                width: 150,
+                child: PasswordBox(
+                  placeholder: 'Passwort',
+                  revealMode: PasswordRevealMode.hidden,
+                  focusNode: _passwordCameraFocusNode,
+                  controller: _passwordCameraTextController,
+                ),
+              ),
+            ],
+          ),
+        ),
         spacer,
         ListCard(
           child: InfoLabel(
