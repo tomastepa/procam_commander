@@ -187,7 +187,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     PaneItem(
       key: const Key('/settings'),
       icon: const Icon(FluentIcons.settings),
-      title: const Text('Settings'),
+      title: const Text('Einstellungen'),
       body: const SizedBox.shrink(),
       onTap: () {
         if (router.location != '/settings') {
