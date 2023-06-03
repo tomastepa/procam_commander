@@ -7,7 +7,7 @@ import '../api/camera_api_client.dart';
 class Camera extends ChangeNotifier {
   CameraApiClient apiClient = CameraApiClient.http();
   List<Preset> _presets = [];
-  final PresetId _currentPresetId = PresetId.none;
+  PresetId _currentPresetId = PresetId.none;
 
   Camera() {
     fetchPresets();
@@ -75,9 +75,13 @@ class Camera extends ChangeNotifier {
   void gotoPresetId(PresetId presetId) {
     var preset = _presets.firstWhere((element) => element.id == presetId);
     apiClient.gotoPreset(preset.position);
+    _currentPresetId = preset.id;
+    notifyListeners();
   }
 
   List<Preset> get presets => _presets;
+
+  PresetId get currentPresetId => _currentPresetId;
 }
 
 class Preset {
