@@ -23,9 +23,9 @@ class ProjectorHttpClient implements ProjectorApiClient {
   }
 
   String getIpAddress(SharedPreferences prefs) {
-    String? ipProjector = prefs.getString('ipProjector');
-    if (ipProjector == null) throw MissingParameterException();
-    return ipProjector;
+    String? ipAddress = prefs.getString('ipProjector');
+    if (ipAddress == null) throw MissingParameterException();
+    return ipAddress;
   }
 
   String getBasicAuthToken(SharedPreferences prefs) {

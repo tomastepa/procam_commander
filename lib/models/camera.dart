@@ -2,9 +2,12 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart' as ms_icons;
 
+import '../api/camera_api_client.dart';
+
 class Camera extends ChangeNotifier {
+  CameraApiClient apiClient = CameraApiClient.http();
   List<Preset> _presets = [];
-  final PresetId _selectedPresetId = PresetId.none;
+  final PresetId _currentPresetId = PresetId.none;
 
   Camera() {
     fetchPresets();
@@ -67,6 +70,11 @@ class Camera extends ChangeNotifier {
 
     _presets = presets;
     notifyListeners();
+  }
+
+  void gotoPresetId(PresetId presetId) {
+    var preset = _presets.firstWhere((element) => element.id == presetId);
+    apiClient.gotoPreset(preset.position);
   }
 
   List<Preset> get presets => _presets;

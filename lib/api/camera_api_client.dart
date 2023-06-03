@@ -1,6 +1,8 @@
-abstract class CameraApiClient {
-  // factory CameraApiClient.http() => CameraHttpClient();
+import 'camera_http_client.dart';
 
-  Future<List<int>> getPresets();
+abstract class CameraApiClient {
+  factory CameraApiClient.http() => CameraHttpClient();
+
+  // Future<List<int>> getPresets();
   void gotoPreset(int preset);
 }
