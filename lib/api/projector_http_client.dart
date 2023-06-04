@@ -37,7 +37,7 @@ class ProjectorHttpClient implements ProjectorApiClient {
   @override
   void turnOn() async {
     var url = Uri.http(_ipAddress, 'cgi-bin/power_on.cgi');
-    var response = await http.post(
+    var response = await http.get(
       url,
       headers: {'authorization': _basicAuthToken},
     );
@@ -48,7 +48,7 @@ class ProjectorHttpClient implements ProjectorApiClient {
   @override
   void turnOff() async {
     var url = Uri.http(_ipAddress, 'cgi-bin/power_off.cgi');
-    var response = await http.post(
+    var response = await http.get(
       url,
       headers: {'authorization': _basicAuthToken},
     );
@@ -59,8 +59,9 @@ class ProjectorHttpClient implements ProjectorApiClient {
   @override
   void avMuteOn() async {
     var url = Uri.http(_ipAddress, 'cgi-bin/proj_ctl.cgi',
-        {'key': 'shutter_on', 'lang': 'e', 'osd': 'on'});
-    var response = await http.post(
+        {'key': 'shutter_on', 'lang': 'e'});
+    print(url);
+    var response = await http.get(
       url,
       headers: {'authorization': _basicAuthToken},
     );
@@ -71,8 +72,8 @@ class ProjectorHttpClient implements ProjectorApiClient {
   @override
   void avMuteOff() async {
     var url = Uri.http(_ipAddress, 'cgi-bin/proj_ctl.cgi',
-        {'key': 'shutter_off', 'lang': 'e', 'osd': 'on'});
-    var response = await http.post(
+        {'key': 'shutter_off', 'lang': 'e'});
+    var response = await http.get(
       url,
       headers: {'authorization': _basicAuthToken},
     );
