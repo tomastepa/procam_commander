@@ -49,6 +49,7 @@ void main() async {
       await windowManager.show();
       await windowManager.setPreventClose(true);
       await windowManager.setSkipTaskbar(false);
+      await windowManager.setTitle(appTitle);
     });
   }
 
@@ -337,31 +338,42 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     bool isPreventClose = await windowManager.isPreventClose();
     if (isPreventClose) {
       // ignore: use_build_context_synchronously
-      showDialog(
-        context: context,
-        builder: (_) {
-          return ContentDialog(
-            title: const Text('Anwendung schließen'),
-            content:
-                const Text('Soll die Anwendung wirklich geschlossen weden?'),
-            actions: [
-              FilledButton(
-                child: const Text('Ja'),
-                onPressed: () {
-                  Navigator.pop(context);
-                  windowManager.destroy();
-                },
-              ),
-              Button(
-                child: const Text('Nein'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          );
-        },
-      );
+      bool isProjectorOn =
+          // ignore: use_build_context_synchronously
+          Provider.of<Projector>(context, listen: false).isPowerOn;
+
+      if (isProjectorOn) {
+        // ignore: use_build_context_synchronously
+        showDialog(
+          context: context,
+          builder: (_) {
+            return ContentDialog(
+              title: const Text('Hoppla 😉'),
+              content: const Text(
+                  'Der Beamer scheint noch angeschaltet zu sein. Soll die Anwendung trotzdem geschlossen weden?'),
+              actions: [
+                FilledButton(
+                  child: const Text('Ja'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    windowManager.destroy();
+                  },
+                ),
+                Button(
+                  child: const Text('Nein'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        // ignore: use_build_context_synchronously
+        // Navigator.pop(context);
+        windowManager.destroy();
+      }
     }
   }
 }
