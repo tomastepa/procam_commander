@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart' as ms_icons;
 
 import '../models/camera.dart';
+import '../models/projector.dart';
 import '../theme.dart';
 import '../widgets/page.dart';
 import '../widgets/list_card.dart';
@@ -56,17 +57,18 @@ class _SettingsScreenState extends State<SettingsScreen> with PageMixin {
   void _saveValue(String key, String value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(key, value);
-    // print('Saved: $key $value');
   }
 
   void _saveCredentialsProjector() {
     if (_userProjectorTextController.text != _userProjector) {
       _userProjector = _userProjectorTextController.text;
       _saveValue('userProjector', _userProjector);
+      Provider.of<Projector>(context, listen: false).onSettingsChanged();
     }
     if (_passwordProjectorTextController.text != _passwordProjector) {
       _passwordProjector = _passwordProjectorTextController.text;
       _saveValue('passwordProjector', _passwordProjector);
+      Provider.of<Projector>(context, listen: false).onSettingsChanged();
     }
   }
 
@@ -74,10 +76,12 @@ class _SettingsScreenState extends State<SettingsScreen> with PageMixin {
     if (_userCameraTextController.text != _userCamera) {
       _userCamera = _userCameraTextController.text;
       _saveValue('userCamera', _userCamera);
+      Provider.of<Camera>(context, listen: false).onSettingsChanged();
     }
     if (_passwordCameraTextController.text != _passwordCamera) {
       _passwordCamera = _passwordCameraTextController.text;
       _saveValue('passwordCamera', _passwordCamera);
+      Provider.of<Camera>(context, listen: false).onSettingsChanged();
     }
   }
 
@@ -86,6 +90,7 @@ class _SettingsScreenState extends State<SettingsScreen> with PageMixin {
 
     _ipCamera = _ipCameraTextController.text;
     _saveValue('ipCamera', _ipCamera);
+    Provider.of<Camera>(context, listen: false).onSettingsChanged();
   }
 
   void _saveIpProjector() {
@@ -93,6 +98,7 @@ class _SettingsScreenState extends State<SettingsScreen> with PageMixin {
 
     _ipProjector = _ipProjectorTextController.text;
     _saveValue('ipProjector', _ipProjector);
+    Provider.of<Projector>(context, listen: false).onSettingsChanged();
   }
 
   void _savePreset(String position, int? value) async {
@@ -161,7 +167,7 @@ class _SettingsScreenState extends State<SettingsScreen> with PageMixin {
       _userCamera = prefs.getString('userCamera') ?? '';
       _userCameraTextController.text = _userCamera;
       _passwordCamera = prefs.getString('passwordCamera') ?? '';
-      _passwordCameraTextController.text = _passwordProjector;
+      _passwordCameraTextController.text = _passwordCamera;
       _ipCamera = prefs.getString('ipCamera') ?? '';
       _ipCameraTextController.text = _ipCamera;
 

@@ -41,6 +41,7 @@ class CameraHttpClient implements CameraApiClient {
       _ipAddress,
       'cgi-bin/ptzctrl.cgi?ptzcmd&poscall&$preset',
     );
+    print(url);
     var response = await http.get(
       url,
       headers: {'authorization': _basicAuthToken},

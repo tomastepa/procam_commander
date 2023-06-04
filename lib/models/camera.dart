@@ -13,6 +13,10 @@ class Camera extends ChangeNotifier {
     fetchPresets();
   }
 
+  void onSettingsChanged() {
+    apiClient = CameraApiClient.http();
+  }
+
   void fetchPresets() async {
     List<Preset> presets = [];
 
