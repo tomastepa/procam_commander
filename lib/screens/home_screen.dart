@@ -1,16 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../widgets/page.dart';
+import '../widgets/page.dart' as page;
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends page.Page {
+  HomeScreen({super.key});
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> with PageMixin {
   @override
   Widget build(BuildContext context) {
     return ScaffoldPage.withPadding(
