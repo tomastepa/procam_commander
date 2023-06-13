@@ -39,7 +39,8 @@ class CameraHttpClient implements CameraApiClient {
   Future<void> gotoPreset(int preset) async {
     var url = Uri.http(
       _ipAddress,
-      'cgi-bin/ptzctrl.cgi?ptzcmd&poscall&$preset',
+      'cgi-bin/ptzctrl.cgi',
+      {'ptzcmd': null, 'poscall': null, '$preset': null,},
     );
     print(url);
     var response = await http.get(
