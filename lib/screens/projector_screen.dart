@@ -16,8 +16,12 @@ class _ProjectorScreenState extends State<ProjectorScreen> with PageMixin {
   final spacer = const SizedBox(height: 10.0);
   final biggerSpacer = const SizedBox(height: 40.0);
 
-  // bool powerOn = false;
-  bool avMuteOn = false;
+  @override
+  void initState() {
+    super.initState();
+    // initially fetch the status
+    Provider.of<Projector>(context).fetchStatus();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +71,7 @@ class _ProjectorScreenState extends State<ProjectorScreen> with PageMixin {
                     textAlign: TextAlign.start,
                   ),
                   Text(
-                    'Inhalte vorübergehend ausblenden',
+                    'Inhalte vorübergehend ein-/ausblenden (Bild "An" / "Aus")',
                     style: FluentTheme.of(context).typography.caption,
                   ),
                 ],
@@ -76,17 +80,17 @@ class _ProjectorScreenState extends State<ProjectorScreen> with PageMixin {
                 child: Container(
                   alignment: Alignment.centerRight,
                   child: ToggleSwitch(
-                    checked: projectorModel.isAvMuteOn,
+                    checked: !projectorModel.isAvMuteOn,
                     // disable ToggleSwitch for AV Mute if power is off
                     onChanged: !projectorModel.isPowerOn
                         ? null
                         : (b) => setState(() {
                               b
-                                  ? projectorModel.avMuteOn()
-                                  : projectorModel.avMuteOff();
+                                  ? projectorModel.avMuteOff()
+                                  : projectorModel.avMuteOn();
                             }),
                     leadingContent: true,
-                    content: Text(projectorModel.isAvMuteOn ? 'An' : 'Aus'),
+                    content: Text(!projectorModel.isAvMuteOn ? 'An' : 'Aus'),
                   ),
                 ),
               ),
