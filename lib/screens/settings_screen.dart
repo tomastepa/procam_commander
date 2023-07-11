@@ -279,7 +279,7 @@ class _SettingsScreenState extends State<SettingsScreen> with PageMixin {
           child: InfoLabel(
             label: 'IP-Adresse',
             child: TextBox(
-              placeholder: '192.168.0.100',
+              placeholder: '0.0.0.0',
               expands: false,
               focusNode: _ipProjectorFocusNode,
               controller: _ipProjectorTextController,
@@ -335,7 +335,7 @@ class _SettingsScreenState extends State<SettingsScreen> with PageMixin {
           child: InfoLabel(
             label: 'IP-Adresse',
             child: TextBox(
-              placeholder: '192.168.0.100',
+              placeholder: '0.0.0.0',
               expands: false,
               focusNode: _ipCameraFocusNode,
               controller: _ipCameraTextController,
