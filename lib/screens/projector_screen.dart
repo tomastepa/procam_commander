@@ -16,11 +16,41 @@ class _ProjectorScreenState extends State<ProjectorScreen> with PageMixin {
   final spacer = const SizedBox(height: 10.0);
   final biggerSpacer = const SizedBox(height: 40.0);
 
-  @override
-  void initState() {
-    super.initState();
-    // initially fetch the status
-    Provider.of<Projector>(context).fetchStatus();
+  void onProjectorPowerChanged(bool isProjectorTurnedOn) async {
+    final projectorModel = Provider.of<Projector>(context, listen: false);
+
+    if (isProjectorTurnedOn) {
+      projectorModel.turnOn();
+    } else {
+      await showDialog(
+        context: context,
+        builder: (ctx) {
+          return ContentDialog(
+            title: const Text('Beamer ausschalten'),
+            content: const Text(
+                'Soll der Beamer wirklich ausgeschaltet werden? Ein Neustart ist erst nach Abkühlen der Lampe wieder möglich und kann einige Minuten dauern.'),
+            actions: [
+              FilledButton(
+                child: const Text('Ja'),
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  projectorModel.turnOff();
+                },
+              ),
+              Button(
+                child: const Text('Nein'),
+                onPressed: () {
+                  Navigator.pop(ctx);
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+    // setState(() {
+    //   b ? projectorModel.turnOn() : projectorModel.turnOff();
+    // });
   }
 
   @override
@@ -46,9 +76,10 @@ class _ProjectorScreenState extends State<ProjectorScreen> with PageMixin {
                   alignment: Alignment.centerRight,
                   child: ToggleSwitch(
                     checked: projectorModel.isPowerOn,
-                    onChanged: (b) => setState(() {
-                      b ? projectorModel.turnOn() : projectorModel.turnOff();
-                    }),
+                    onChanged: onProjectorPowerChanged,
+                    // onChanged: (b) => setState(() {
+                    //   b ? projectorModel.turnOn() : projectorModel.turnOff();
+                    // }),
                     leadingContent: true,
                     content: Text(projectorModel.isPowerOn ? 'An' : 'Aus'),
                   ),
@@ -80,7 +111,9 @@ class _ProjectorScreenState extends State<ProjectorScreen> with PageMixin {
                 child: Container(
                   alignment: Alignment.centerRight,
                   child: ToggleSwitch(
-                    checked: !projectorModel.isAvMuteOn,
+                    checked: projectorModel.isPowerOn
+                        ? !projectorModel.isAvMuteOn
+                        : false,
                     // disable ToggleSwitch for AV Mute if power is off
                     onChanged: !projectorModel.isPowerOn
                         ? null
@@ -90,7 +123,13 @@ class _ProjectorScreenState extends State<ProjectorScreen> with PageMixin {
                                   : projectorModel.avMuteOn();
                             }),
                     leadingContent: true,
-                    content: Text(!projectorModel.isAvMuteOn ? 'An' : 'Aus'),
+                    content: Text(projectorModel.isPowerOn
+                        ? !projectorModel.isAvMuteOn
+                            ? 'An'
+                            : 'Aus'
+                        : projectorModel.isAvMuteOn
+                            ? 'An'
+                            : 'Aus'),
                   ),
                 ),
               ),
