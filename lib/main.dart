@@ -156,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
       title: const Text('Home'),
       body: const SizedBox.shrink(),
       onTap: () {
-        if (router.location != '/') router.pushNamed('home');
+        if (router.location != '/') router.goNamed('home');
       },
     ),
     PaneItemHeader(header: const Text('Geräte')),
