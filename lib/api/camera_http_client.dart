@@ -25,7 +25,10 @@ class CameraHttpClient implements CameraApiClient {
 
   String getIpAddress(SharedPreferences prefs) {
     String? ipAddress = prefs.getString('ipCamera');
-    if (ipAddress == null) throw MissingParameterException();
+    if (ipAddress == null || ipAddress.isEmpty) {
+      throw MissingParameterException(
+          'Zur Kamera wurde keine IP Adresse gefunden.');
+    }
     return ipAddress;
   }
 
@@ -40,7 +43,11 @@ class CameraHttpClient implements CameraApiClient {
     var url = Uri.http(
       _ipAddress,
       'cgi-bin/ptzctrl.cgi',
-      {'ptzcmd': null, 'poscall': null, '$preset': null,},
+      {
+        'ptzcmd': null,
+        'poscall': null,
+        '$preset': null,
+      },
     );
     print(url);
     var response = await http.get(

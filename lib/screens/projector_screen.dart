@@ -16,10 +16,10 @@ class _ProjectorScreenState extends State<ProjectorScreen> with PageMixin {
   final spacer = const SizedBox(height: 10.0);
   final biggerSpacer = const SizedBox(height: 40.0);
 
-  void onProjectorPowerChanged(bool isProjectorTurnedOn) async {
+  void togglePower(bool isTurnedOn) async {
     final projectorModel = Provider.of<Projector>(context, listen: false);
 
-    if (isProjectorTurnedOn) {
+    if (isTurnedOn) {
       projectorModel.turnOn();
     } else {
       await showDialog(
@@ -48,14 +48,33 @@ class _ProjectorScreenState extends State<ProjectorScreen> with PageMixin {
         },
       );
     }
-    // setState(() {
-    //   b ? projectorModel.turnOn() : projectorModel.turnOff();
-    // });
   }
+
+  // void showErrorInfoBar(String message) async {
+  //   displayInfoBar(
+  //     context,
+  //     builder: (ctx, close) {
+  //       return InfoBar(
+  //         title: const Text('Fehler'),
+  //         content: Text(message),
+  //         action: IconButton(
+  //           icon: const Icon(FluentIcons.clear),
+  //           onPressed: close,
+  //         ),
+  //         severity: InfoBarSeverity.warning,
+  //       );
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
     final projectorModel = Provider.of<Projector>(context);
+
+    // if (projectorModel.hasError) {
+    //   showErrorInfoBar(projectorModel.errorMessage);
+    //   projectorModel.resetErrorState();
+    // }
 
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Beamer')),
@@ -76,7 +95,7 @@ class _ProjectorScreenState extends State<ProjectorScreen> with PageMixin {
                   alignment: Alignment.centerRight,
                   child: ToggleSwitch(
                     checked: projectorModel.isPowerOn,
-                    onChanged: onProjectorPowerChanged,
+                    onChanged: togglePower,
                     // onChanged: (b) => setState(() {
                     //   b ? projectorModel.turnOn() : projectorModel.turnOff();
                     // }),

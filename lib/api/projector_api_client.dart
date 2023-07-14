@@ -3,7 +3,7 @@ import './projector_http_client.dart';
 abstract class ProjectorApiClient {
   factory ProjectorApiClient.http() => ProjectorHttpClient();
 
-  void turnOn();
+  Future<void> turnOn();
   void turnOff();
   void avMuteOn();
   void avMuteOff();

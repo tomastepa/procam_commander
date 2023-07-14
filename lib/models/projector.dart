@@ -3,18 +3,25 @@ import 'package:fluent_ui/fluent_ui.dart';
 import '../api/projector_api_client.dart';
 
 class Projector extends ChangeNotifier {
-  ProjectorApiClient _apiClient = ProjectorApiClient.http();
+  late ProjectorApiClient _apiClient = ProjectorApiClient.http();
   bool _isPowerOn = false;
   bool _isAvMuteOn = false;
+  bool _hasError = false;
+  String _errorMessage = '';
 
   onSettingsChanged() {
     _apiClient = ProjectorApiClient.http();
   }
 
   void turnOn() async {
-    _apiClient.turnOn();
-    _isPowerOn = true;
-    notifyListeners();
+    _apiClient.turnOn().then((_) {
+      _isPowerOn = true;
+      notifyListeners();
+    }).catchError((error, _) {
+      _hasError = true;
+      _errorMessage = error.toString();
+      notifyListeners();
+    });
   }
 
   void turnOff() async {
@@ -54,7 +61,16 @@ class Projector extends ChangeNotifier {
     if (hasStatusChanged) notifyListeners();
   }
 
+  void resetErrorState() {
+    _hasError = false;
+    _errorMessage = '';
+  }
+
   bool get isPowerOn => _isPowerOn;
 
   bool get isAvMuteOn => _isAvMuteOn;
+
+  String get errorMessage => _errorMessage;
+
+  bool get hasError => _hasError;
 }
