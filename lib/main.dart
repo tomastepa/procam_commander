@@ -1,3 +1,5 @@
+// import 'dart:html';
+
 import 'package:procam_commander/models/projector.dart';
 
 import 'screens/home_screen.dart';
@@ -68,6 +70,8 @@ void main() async {
   // ]);
 }
 
+final _appTheme = AppTheme();
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -75,8 +79,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => AppTheme(),
+    return ChangeNotifierProvider.value(
+      value: _appTheme,
       builder: (context, _) {
         final appTheme = context.watch<AppTheme>();
         return FluentApp.router(
@@ -128,12 +132,10 @@ class MyHomePage extends StatefulWidget {
     super.key,
     required this.child,
     required this.shellContext,
-    required this.state,
   });
 
   final Widget child;
   final BuildContext? shellContext;
-  final GoRouterState state;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -142,57 +144,54 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> with WindowListener {
   bool value = false;
 
-  // int index = 0;
-
   final viewKey = GlobalKey(debugLabel: 'Navigation View Key');
-  // final searchKey = GlobalKey(debugLabel: 'Search Bar Key');
-  // final searchFocusNode = FocusNode();
-  // final searchController = TextEditingController();
 
-  final List<NavigationPaneItem> originalItems = [
+  late final List<NavigationPaneItem> originalItems = [
     PaneItem(
-      key: const Key('/'),
+      key: const ValueKey('/'),
       icon: const Icon(FluentIcons.home),
       title: const Text('Home'),
       body: const SizedBox.shrink(),
       onTap: () {
-        if (router.location != '/') router.goNamed('home');
+        if (GoRouterState.of(context).uri.toString() != '/') {
+          context.go('/');
+        }
       },
     ),
     PaneItemHeader(header: const Text('Geräte')),
     PaneItem(
-      key: const Key('/projector'),
+      key: const ValueKey('/projector'),
       icon: const Icon(FluentIcons.screen),
       title: const Text('Beamer'),
       body: const SizedBox.shrink(),
       onTap: () {
-        if (router.location != '/projector') {
-          router.pushNamed('projector');
+        if (GoRouterState.of(context).uri.toString() != '/projector') {
+          context.go('/projector');
         }
       },
     ),
     PaneItem(
-      key: const Key('/camera'),
+      key: const ValueKey('/camera'),
       icon: const Icon(FluentIcons.camera),
       title: const Text('Kamera'),
       body: const SizedBox.shrink(),
       onTap: () {
-        if (router.location != '/camera') {
-          router.pushNamed('camera');
+        if (GoRouterState.of(context).uri.toString() != '/camera') {
+          context.go('/camera');
         }
       },
     ),
   ];
-  final List<NavigationPaneItem> footerItems = [
+  late final List<NavigationPaneItem> footerItems = [
     PaneItemSeparator(),
     PaneItem(
-      key: const Key('/settings'),
+      key: const ValueKey('/settings'),
       icon: const Icon(FluentIcons.settings),
       title: const Text('Einstellungen'),
       body: const SizedBox.shrink(),
       onTap: () {
-        if (router.location != '/settings') {
-          router.pushNamed('settings');
+        if (GoRouterState.of(context).uri.toString() != '/settings') {
+          context.go('/settings');
         }
       },
     ),
@@ -213,13 +212,11 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   @override
   void dispose() {
     windowManager.removeListener(this);
-    // searchController.dispose();
-    // searchFocusNode.dispose();
     super.dispose();
   }
 
   int _calculateSelectedIndex(BuildContext context) {
-    final location = router.location;
+    final location = GoRouterState.of(context).uri.toString();
     int indexOriginal = originalItems
         .where((element) => element.key != null)
         .toList()
@@ -249,16 +246,23 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
 
     final appTheme = context.watch<AppTheme>();
 
+    if (widget.shellContext != null) {
+      if (router.canPop() == false) {
+        setState(() {});
+      }
+    }
+
     return NavigationView(
       key: viewKey,
       appBar: NavigationAppBar(
         automaticallyImplyLeading: false,
         leading: () {
-          final enabled = widget.shellContext != null && router.canPop();
+          // final enabled = widget.shellContext != null && router.canPop();
+          final enabled = widget.shellContext != null && context.canPop();
 
           final onPressed = enabled
               ? () {
-                  if (router.canPop()) {
+                  if (context.canPop()) {
                     context.pop();
                     setState(() {});
                   }
@@ -292,12 +296,6 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
           );
         }(),
         title: () {
-          // if (kIsWeb) {
-          //   return const Align(
-          //     alignment: AlignmentDirectional.centerStart,
-          //     child: Text(appTitle),
-          //   );
-          // }
           return const DragToMoveArea(
             child: Align(
               alignment: AlignmentDirectional.centerStart,
@@ -418,14 +416,17 @@ class _LinkPaneItemAction extends PaneItem {
   }) {
     return Link(
       uri: Uri.parse(link),
-      builder: (context, followLink) => super.build(
-        context,
-        selected,
-        followLink,
-        displayMode: displayMode,
-        showTextOnTop: showTextOnTop,
-        itemIndex: itemIndex,
-        autofocus: autofocus,
+      builder: (context, followLink) => Semantics(
+        link: true,
+        child: super.build(
+          context,
+          selected,
+          followLink,
+          displayMode: displayMode,
+          showTextOnTop: showTextOnTop,
+          itemIndex: itemIndex,
+          autofocus: autofocus,
+        ),
       ),
     );
   }
@@ -441,7 +442,7 @@ final router = GoRouter(
       builder: (context, state, child) {
         return MyHomePage(
           shellContext: _shellNavigatorKey.currentContext,
-          state: state,
+          // state: state,
           child: child,
         );
       },
@@ -449,28 +450,28 @@ final router = GoRouter(
         /// Home
         GoRoute(
           path: '/',
-          name: 'home',
+          // name: 'home',
           builder: (context, state) => HomeScreen(),
         ),
 
         /// Projector
         GoRoute(
           path: '/projector',
-          name: 'projector',
+          // name: 'projector',
           builder: (context, state) => const ProjectorScreen(),
         ),
 
         /// Camera
         GoRoute(
           path: '/camera',
-          name: 'camera',
+          // name: 'camera',
           builder: (context, state) => const CameraScreen(),
         ),
 
         /// Settings
         GoRoute(
           path: '/settings',
-          name: 'settings',
+          // name: 'settings',
           builder: (context, state) => const SettingsScreen(),
         ),
       ],
