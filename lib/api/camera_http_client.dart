@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -20,7 +21,9 @@ class CameraHttpClient implements CameraApiClient {
 
     _basicAuthToken = getBasicAuthToken(prefs);
     _ipAddress = getIpAddress(prefs);
-    print('IP: $_ipAddress');
+    if (kDebugMode) {
+      print('IP: $_ipAddress');
+    }
   }
 
   String getIpAddress(SharedPreferences prefs) {
@@ -49,12 +52,16 @@ class CameraHttpClient implements CameraApiClient {
         '$preset': null,
       },
     );
-    print(url);
+    if (kDebugMode) {
+      print(url);
+    }
     var response = await http.get(
       url,
       headers: {'authorization': _basicAuthToken},
     );
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
+    if (kDebugMode) {
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+    }
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 // import 'dart:js_interop';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,7 +21,9 @@ class ProjectorHttpClient implements ProjectorApiClient {
 
     _basicAuthToken = getBasicAuthToken(prefs);
     _ipAddress = getIpAddress(prefs);
-    print('IP: $_ipAddress');
+    if (kDebugMode) {
+      print('IP: $_ipAddress');
+    }
   }
 
   String? getIpAddress(SharedPreferences prefs) {
@@ -53,8 +56,10 @@ class ProjectorHttpClient implements ProjectorApiClient {
       url,
       headers: {'authorization': _basicAuthToken as String},
     );
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
+    if (kDebugMode) {
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+    }
   }
 
   @override
@@ -72,8 +77,10 @@ class ProjectorHttpClient implements ProjectorApiClient {
       url,
       headers: {'authorization': _basicAuthToken as String},
     );
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
+    if (kDebugMode) {
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+    }
   }
 
   @override
@@ -88,13 +95,17 @@ class ProjectorHttpClient implements ProjectorApiClient {
     }
     var url = Uri.http(_ipAddress!, 'cgi-bin/proj_ctl.cgi',
         {'key': 'shutter_on', 'lang': 'e'});
-    print(url);
+    if (kDebugMode) {
+      print(url);
+    }
     var response = await http.get(
       url,
       headers: {'authorization': _basicAuthToken as String},
     );
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
+    if (kDebugMode) {
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+    }
   }
 
   @override
@@ -113,8 +124,10 @@ class ProjectorHttpClient implements ProjectorApiClient {
       url,
       headers: {'authorization': _basicAuthToken as String},
     );
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
+    if (kDebugMode) {
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+    }
   }
 
   @override
@@ -125,8 +138,10 @@ class ProjectorHttpClient implements ProjectorApiClient {
       url,
       headers: {'authorization': _basicAuthToken as String},
     );
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
+    if (kDebugMode) {
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+    }
   }
 
   @override
