@@ -47,7 +47,7 @@ class _CameraScreenState extends State<CameraScreen> {
                   leading: preset.icon,
                   title: Text(preset.title),
                   selected: selectedPresetId == preset.id,
-                  onSelectionChange: (v) {
+                  onSelectionChange: (_) {
                     cameraModel.gotoPresetId(preset.id);
                     setState(() => selectedPresetId = preset.id);
                   },

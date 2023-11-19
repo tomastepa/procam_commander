@@ -141,13 +141,13 @@ class _SettingsScreenState extends State<SettingsScreen> with PageMixin {
 
   @override
   void initState() {
-    super.initState();
-    _userProjectorFocusNode = FocusNode();
-    _passwordProjectorFocusNode = FocusNode();
-    _ipCameraFocusNode = FocusNode();
-    _userCameraFocusNode = FocusNode();
-    _passwordCameraFocusNode = FocusNode();
-    _ipProjectorFocusNode = FocusNode();
+    _userProjectorFocusNode = FocusNode(debugLabel: 'userProjectorFocusNode');
+    _passwordProjectorFocusNode =
+        FocusNode(debugLabel: 'passwordProjectorFocusNode');
+    _ipCameraFocusNode = FocusNode(debugLabel: 'ipCameraFocusNode');
+    _userCameraFocusNode = FocusNode(debugLabel: 'userCameraFocusNode');
+    _passwordCameraFocusNode = FocusNode(debugLabel: 'passwordCameraFocusNode');
+    _ipProjectorFocusNode = FocusNode(debugLabel: 'ipProjectorFocusNode');
 
     _userProjectorFocusNode.addListener(_saveCredentialsProjector);
     _passwordProjectorFocusNode.addListener(_saveCredentialsProjector);
@@ -179,6 +179,7 @@ class _SettingsScreenState extends State<SettingsScreen> with PageMixin {
             prefs.getInt('studentAssignmentCameraPosition');
       });
     });
+    super.initState();
   }
 
   @override
@@ -189,12 +190,17 @@ class _SettingsScreenState extends State<SettingsScreen> with PageMixin {
     _ipProjectorFocusNode.removeListener(_saveIpProjector);
     _userCameraFocusNode.removeListener(_saveCredentialsCamera);
     _passwordCameraFocusNode.removeListener(_saveCredentialsCamera);
+
     _userProjectorFocusNode.dispose();
-    _passwordProjectorFocusNode.dispose();
+    // _passwordProjectorFocusNode is already disposed somehow.
+    // This has so.th. to do with the used PasswordBox widget.
+    // _passwordProjectorFocusNode.dispose();
     _ipCameraFocusNode.dispose();
     _ipProjectorFocusNode.dispose();
     _userCameraFocusNode.dispose();
-    _passwordCameraFocusNode.dispose();
+    // _passwordCameraFocusNode is already disposed somehow.
+    // This has so.th. to do with the used PasswordBox widget.
+    // _passwordCameraFocusNode.dispose();
     _userProjectorTextController.dispose();
     _passwordProjectorTextController.dispose();
     _ipCameraTextController.dispose();
