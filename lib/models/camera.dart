@@ -26,7 +26,7 @@ class Camera extends ChangeNotifier {
       presets.add(
         Preset(
           PresetId.defaultCameraPosition,
-          'Default',
+          'Standard',
           position,
           const Icon(ms_icons.FluentIcons.home_24_regular),
         ),

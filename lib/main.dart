@@ -64,10 +64,6 @@ void main() async {
       child: const MyApp(),
     ),
   );
-
-  // Future.wait([
-  //   DeferredWidget.preload(devices.loadLibrary),
-  // ]);
 }
 
 final _appTheme = AppTheme();
@@ -198,8 +194,10 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     _LinkPaneItemAction(
       icon: const Icon(FluentIcons.open_source),
       title: const Text('Source code'),
+      trailing: const Icon(FluentIcons.navigate_external_inline),
       link: 'https://github.com/tomastepa/procam_commander',
-      body: const SizedBox.shrink(),
+      // body: const SizedBox.shrink(),
+      body: const Text('Hello'),
     ),
   ];
 
@@ -400,6 +398,7 @@ class _LinkPaneItemAction extends PaneItem {
     required this.link,
     required super.body,
     super.title,
+    super.trailing,
   });
 
   final String link;

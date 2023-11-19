@@ -25,12 +25,11 @@ class _CameraScreenState extends State<CameraScreen> {
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Kamera')),
       children: [
-        Text('Presets', style: FluentTheme.of(context).typography.subtitle),
+        Text('Position ansteuern',
+            style: FluentTheme.of(context).typography.subtitle),
         spacer,
         ListCard(
           child: Container(
-            // height: 400,
-            // width: 350,
             decoration: BoxDecoration(
               border: Border.all(
                 color:
@@ -38,7 +37,6 @@ class _CameraScreenState extends State<CameraScreen> {
               ),
             ),
             child: ListView.builder(
-              // controller: firstController,
               shrinkWrap: true,
               itemCount: cameraModel.presets.length,
               itemBuilder: (context, index) {
