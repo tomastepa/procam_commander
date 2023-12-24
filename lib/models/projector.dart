@@ -6,8 +6,6 @@ class Projector extends ChangeNotifier {
   late ProjectorApiClient _apiClient = ProjectorApiClient.http();
   bool _isPowerOn = false;
   bool _isAvMuteOn = false;
-  bool _hasError = false;
-  String _errorMessage = '';
 
   onSettingsChanged() {
     _apiClient = ProjectorApiClient.http();

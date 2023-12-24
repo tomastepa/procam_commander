@@ -1,11 +1,20 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 
 enum NavigationIndicators { sticky, end }
 
 class AppTheme extends ChangeNotifier {
+  AppTheme() {
+    init();
+  }
+
+  void init() async {
+    mode = await fetchMode();
+  }
+
   AccentColor _color = systemAccentColor;
   AccentColor get color => _color;
   set color(AccentColor color) {
@@ -13,11 +22,28 @@ class AppTheme extends ChangeNotifier {
     notifyListeners();
   }
 
+  // ThemeMode _mode = ThemeMode.system;
   ThemeMode _mode = ThemeMode.system;
   ThemeMode get mode => _mode;
   set mode(ThemeMode mode) {
     _mode = mode;
+    persistMode(mode);
     notifyListeners();
+  }
+
+  void persistMode(ThemeMode mode) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('themeMode', mode.name);
+  }
+
+  Future<ThemeMode> fetchMode() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? mode = prefs.getString('themeMode');
+    if (mode == null) {
+      return ThemeMode.system;
+    } else {
+      return ThemeMode.values.firstWhere((element) => element.name == mode);
+    }
   }
 
   PaneDisplayMode _displayMode = PaneDisplayMode.auto;
