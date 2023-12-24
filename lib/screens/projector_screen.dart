@@ -20,7 +20,11 @@ class _ProjectorScreenState extends State<ProjectorScreen> with PageMixin {
     final projectorModel = Provider.of<Projector>(context, listen: false);
 
     if (isTurnedOn) {
-      projectorModel.turnOn();
+      try {
+        await projectorModel.turnOn();
+      } catch (e) {
+        showErrorInfoBar(e.toString());
+      }
     } else {
       await showDialog(
         context: context,
@@ -34,7 +38,7 @@ class _ProjectorScreenState extends State<ProjectorScreen> with PageMixin {
                 child: const Text('Ja'),
                 onPressed: () {
                   Navigator.pop(ctx);
-                  projectorModel.turnOff();
+                  turnOff();
                 },
               ),
               Button(
@@ -50,31 +54,45 @@ class _ProjectorScreenState extends State<ProjectorScreen> with PageMixin {
     }
   }
 
-  // void showErrorInfoBar(String message) async {
-  //   displayInfoBar(
-  //     context,
-  //     builder: (ctx, close) {
-  //       return InfoBar(
-  //         title: const Text('Fehler'),
-  //         content: Text(message),
-  //         action: IconButton(
-  //           icon: const Icon(FluentIcons.clear),
-  //           onPressed: close,
-  //         ),
-  //         severity: InfoBarSeverity.warning,
-  //       );
-  //     },
-  //   );
-  // }
+  void turnOff() async {
+    final projectorModel = Provider.of<Projector>(context, listen: false);
+    try {
+      await projectorModel.turnOff();
+    } catch (e) {
+      showErrorInfoBar(e.toString());
+    }
+  }
+
+  void toggleAvMute(bool isAvMuteOn) async {
+    final projectorModel = Provider.of<Projector>(context, listen: false);
+
+    try {
+      projectorModel.toggleAvMute();
+    } catch (e) {
+      showErrorInfoBar(e.toString());
+    }
+  }
+
+  void showErrorInfoBar(String message) {
+    displayInfoBar(
+      context,
+      builder: (ctx, close) {
+        return InfoBar(
+          title: const Text('Fehler'),
+          content: Text(message),
+          action: IconButton(
+            icon: const Icon(FluentIcons.clear),
+            onPressed: close,
+          ),
+          severity: InfoBarSeverity.error,
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final projectorModel = Provider.of<Projector>(context);
-
-    // if (projectorModel.hasError) {
-    //   showErrorInfoBar(projectorModel.errorMessage);
-    //   projectorModel.resetErrorState();
-    // }
 
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Beamer')),
@@ -96,9 +114,6 @@ class _ProjectorScreenState extends State<ProjectorScreen> with PageMixin {
                   child: ToggleSwitch(
                     checked: projectorModel.isPowerOn,
                     onChanged: togglePower,
-                    // onChanged: (b) => setState(() {
-                    //   b ? projectorModel.turnOn() : projectorModel.turnOff();
-                    // }),
                     leadingContent: true,
                     content: Text(projectorModel.isPowerOn ? 'An' : 'Aus'),
                   ),
@@ -134,13 +149,7 @@ class _ProjectorScreenState extends State<ProjectorScreen> with PageMixin {
                         ? !projectorModel.isAvMuteOn
                         : false,
                     // disable ToggleSwitch for AV Mute if power is off
-                    onChanged: !projectorModel.isPowerOn
-                        ? null
-                        : (b) => setState(() {
-                              b
-                                  ? projectorModel.avMuteOff()
-                                  : projectorModel.avMuteOn();
-                            }),
+                    onChanged: projectorModel.isPowerOn ? toggleAvMute : null,
                     leadingContent: true,
                     content: Text(projectorModel.isPowerOn
                         ? !projectorModel.isAvMuteOn

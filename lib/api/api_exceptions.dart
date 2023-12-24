@@ -5,6 +5,7 @@ class MissingParameterException implements Exception {
 
   @override
   String toString() {
-    return 'MissingParameterException: $message';
+    // return 'MissingParameterException: $message';
+    return message;
   }
 }

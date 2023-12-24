@@ -13,34 +13,35 @@ class Projector extends ChangeNotifier {
     _apiClient = ProjectorApiClient.http();
   }
 
-  void turnOn() async {
-    _apiClient.turnOn().then((_) {
+  Future<void> turnOn() async {
+    try {
+      await _apiClient.turnOn();
       _isPowerOn = true;
       notifyListeners();
-    }).catchError((error, _) {
-      _hasError = true;
-      _errorMessage = error.toString();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> turnOff() async {
+    try {
+      await _apiClient.turnOff();
+      _isPowerOn = false;
+      _isAvMuteOn = false;
       notifyListeners();
-    });
+    } catch (e) {
+      rethrow;
+    }
   }
 
-  void turnOff() async {
-    _apiClient.turnOff();
-    _isPowerOn = false;
-    _isAvMuteOn = false;
-    notifyListeners();
-  }
-
-  void avMuteOn() {
-    _apiClient.avMuteOn();
-    _isAvMuteOn = true;
-    notifyListeners();
-  }
-
-  void avMuteOff() {
-    _apiClient.avMuteOff();
-    _isAvMuteOn = false;
-    notifyListeners();
+  void toggleAvMute() async {
+    try {
+      _isAvMuteOn ? _apiClient.avMuteOff() : _apiClient.avMuteOn();
+      _isAvMuteOn = !_isAvMuteOn;
+      notifyListeners();
+    } catch (e) {
+      rethrow;
+    }
   }
 
   void fetchStatus() async {
@@ -61,16 +62,7 @@ class Projector extends ChangeNotifier {
     if (hasStatusChanged) notifyListeners();
   }
 
-  void resetErrorState() {
-    _hasError = false;
-    _errorMessage = '';
-  }
-
   bool get isPowerOn => _isPowerOn;
 
   bool get isAvMuteOn => _isAvMuteOn;
-
-  String get errorMessage => _errorMessage;
-
-  bool get hasError => _hasError;
 }

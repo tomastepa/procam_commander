@@ -16,6 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:url_launcher/link.dart';
 import 'package:window_manager/window_manager.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart' as ms_icons;
 
 // import 'routes/devices.dart' deferred as devices;
 import 'theme.dart';
@@ -58,8 +59,8 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (cotext) => Projector()),
-        ChangeNotifierProvider(create: (cotext) => Camera()),
+        ChangeNotifierProvider(create: (context) => Projector()),
+        ChangeNotifierProvider(create: (context) => Camera()),
       ],
       child: const MyApp(),
     ),
@@ -168,7 +169,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     ),
     PaneItem(
       key: const ValueKey('/camera'),
-      icon: const Icon(FluentIcons.camera),
+      icon: const Icon(ms_icons.FluentIcons.camera_dome_24_regular),
       title: const Text('Kamera'),
       body: const SizedBox.shrink(),
       onTap: () {

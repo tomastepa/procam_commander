@@ -1,4 +1,5 @@
 import 'dart:convert';
+// import 'dart:html';
 // import 'dart:js_interop';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -10,6 +11,7 @@ import './api_exceptions.dart';
 class ProjectorHttpClient implements ProjectorApiClient {
   String? _ipAddress;
   String? _basicAuthToken;
+  static const String _emptyAuthToken = 'Basic bnVsbDpudWxs';
 
   ProjectorHttpClient() {
     init();
@@ -38,95 +40,84 @@ class ProjectorHttpClient implements ProjectorApiClient {
   String? getBasicAuthToken(SharedPreferences prefs) {
     String? username = prefs.getString('userProjector');
     String? password = prefs.getString('passwordProjector');
+    print('$username:$password');
     return 'Basic ${base64Encode(utf8.encode('$username:$password'))}';
   }
 
   @override
   Future<void> turnOn() async {
-    if (_ipAddress == null) {
-      throw MissingParameterException(
-          'Zum Beamer wurde keine IP Adresse gefunden.');
-    }
-    if (_basicAuthToken == null) {
-      throw MissingParameterException(
-          'Zum Beamer wurden keine Anmeldedaten gefunden.');
-    }
-    var url = Uri.http(_ipAddress!, 'cgi-bin/power_on.cgi');
-    var response = await http.get(
-      url,
-      headers: {'authorization': _basicAuthToken as String},
-    );
-    if (kDebugMode) {
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
+    try {
+      validateParams();
+      var url = Uri.http(_ipAddress!, 'cgi-bin/power_on.cgi');
+      var response = await http.get(
+        url,
+        headers: {'authorization': _basicAuthToken as String},
+      );
+      if (kDebugMode) {
+        print('Response status: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 
   @override
-  void turnOff() async {
-    if (_ipAddress == null) {
-      throw MissingParameterException(
-          'Zum Beamer wurde keine IP Adresse gefunden.');
-    }
-    if (_basicAuthToken == null) {
-      throw MissingParameterException(
-          'Zum Beamer wurden keine Anmeldedaten gefunden.');
-    }
-    var url = Uri.http(_ipAddress!, 'cgi-bin/power_off.cgi');
-    var response = await http.get(
-      url,
-      headers: {'authorization': _basicAuthToken as String},
-    );
-    if (kDebugMode) {
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
+  Future<void> turnOff() async {
+    try {
+      validateParams();
+      var url = Uri.http(_ipAddress!, 'cgi-bin/power_off.cgi');
+      var response = await http.get(
+        url,
+        headers: {'authorization': _basicAuthToken as String},
+      );
+      if (kDebugMode) {
+        print('Response status: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 
   @override
-  void avMuteOn() async {
-    if (_ipAddress == null) {
-      throw MissingParameterException(
-          'Zum Beamer wurde keine IP Adresse gefunden.');
-    }
-    if (_basicAuthToken == null) {
-      throw MissingParameterException(
-          'Zum Beamer wurden keine Anmeldedaten gefunden.');
-    }
-    var url = Uri.http(_ipAddress!, 'cgi-bin/proj_ctl.cgi',
-        {'key': 'shutter_on', 'lang': 'e'});
-    if (kDebugMode) {
-      print(url);
-    }
-    var response = await http.get(
-      url,
-      headers: {'authorization': _basicAuthToken as String},
-    );
-    if (kDebugMode) {
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
+  Future<void> avMuteOn() async {
+    try {
+      validateParams();
+      var url = Uri.http(_ipAddress!, 'cgi-bin/proj_ctl.cgi',
+          {'key': 'shutter_on', 'lang': 'e'});
+      if (kDebugMode) {
+        print(url);
+      }
+      var response = await http.get(
+        url,
+        headers: {'authorization': _basicAuthToken as String},
+      );
+      if (kDebugMode) {
+        print('Response status: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 
   @override
-  void avMuteOff() async {
-    if (_ipAddress == null) {
-      throw MissingParameterException(
-          'Zum Beamer wurde keine IP Adresse gefunden.');
-    }
-    if (_basicAuthToken == null) {
-      throw MissingParameterException(
-          'Zum Beamer wurden keine Anmeldedaten gefunden.');
-    }
-    var url = Uri.http(_ipAddress!, 'cgi-bin/proj_ctl.cgi',
-        {'key': 'shutter_off', 'lang': 'e'});
-    var response = await http.get(
-      url,
-      headers: {'authorization': _basicAuthToken as String},
-    );
-    if (kDebugMode) {
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
+  Future<void> avMuteOff() async {
+    try {
+      validateParams();
+      var url = Uri.http(_ipAddress!, 'cgi-bin/proj_ctl.cgi',
+          {'key': 'shutter_off', 'lang': 'e'});
+      var response = await http.get(
+        url,
+        headers: {'authorization': _basicAuthToken as String},
+      );
+      if (kDebugMode) {
+        print('Response status: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -202,5 +193,16 @@ class ProjectorHttpClient implements ProjectorApiClient {
       return response.body;
     }
     throw Exception('Failed to load projector\'s status page');
+  }
+
+  void validateParams() {
+    if (_ipAddress == null) {
+      throw MissingParameterException(
+          'Zum Beamer wurde keine IP Adresse gefunden.');
+    }
+    if (_basicAuthToken == null || _basicAuthToken == _emptyAuthToken) {
+      throw MissingParameterException(
+          'Zum Beamer wurden keine Anmeldedaten gefunden.');
+    }
   }
 }
