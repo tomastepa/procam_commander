@@ -16,11 +16,13 @@ class _CameraScreenState extends State<CameraScreen> {
   final spacer = const SizedBox(height: 10.0);
   final biggerSpacer = const SizedBox(height: 40.0);
 
-  PresetId? selectedPresetId;
+  String? selectedPresetId;
 
   @override
   Widget build(BuildContext context) {
     final cameraModel = Provider.of<Camera>(context);
+    var presets =
+        cameraModel.presets.where((preset) => preset.position != null).toList();
 
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Kamera')),
@@ -38,12 +40,12 @@ class _CameraScreenState extends State<CameraScreen> {
             ),
             child: ListView.builder(
               shrinkWrap: true,
-              itemCount: cameraModel.presets.length,
+              itemCount: presets.length,
               itemBuilder: (context, index) {
-                final preset = cameraModel.presets[index];
+                final preset = presets[index];
                 return ListTile.selectable(
                   leading: preset.icon,
-                  title: Text(preset.title),
+                  title: Text(preset.name),
                   selected: selectedPresetId == preset.id,
                   onSelectionChange: (_) {
                     cameraModel.gotoPresetId(preset.id);

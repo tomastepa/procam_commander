@@ -1,9 +1,9 @@
 // import 'dart:html';
 
-import 'package:procam_commander/models/projector.dart';
+import './models/projector.dart';
+import './models/camera.dart';
 
 import 'screens/home_screen.dart';
-import 'models/camera.dart';
 import 'screens/projector_screen.dart';
 import 'screens/camera_screen.dart';
 import 'screens/settings_screen.dart';

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:procam_commander/widgets/camera_preset_list.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart' as ms_icons;
@@ -49,10 +50,6 @@ class _SettingsScreenState extends State<SettingsScreen> with PageMixin {
   String _userCamera = '';
   String _passwordCamera = '';
   String _ipCamera = '';
-  int? _defaultPosition,
-      _speakerPosition,
-      _readerPosition,
-      _studentAssignmentPosition;
 
   void _saveValue(String key, String value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -101,44 +98,6 @@ class _SettingsScreenState extends State<SettingsScreen> with PageMixin {
     Provider.of<Projector>(context, listen: false).onSettingsChanged();
   }
 
-  void _savePreset(String position, int? value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    if (value == null) {
-      prefs.remove(position);
-    } else {
-      prefs.setInt(position, value);
-    }
-  }
-
-  void _savePresetDefault(int? value) {
-    if (_defaultPosition == value) return;
-    _savePreset('defaultCameraPosition', value);
-    setState(() => _defaultPosition = value);
-    Provider.of<Camera>(context, listen: false).fetchPresets();
-  }
-
-  void _savePresetSpeaker(int? value) {
-    if (_speakerPosition == value) return;
-    _savePreset('speakerCameraPosition', value);
-    setState(() => _speakerPosition = value);
-    Provider.of<Camera>(context, listen: false).fetchPresets();
-  }
-
-  void _savePresetReader(int? value) {
-    if (_readerPosition == value) return;
-    _savePreset('readerCameraPosition', value);
-    setState(() => _readerPosition = value);
-    Provider.of<Camera>(context, listen: false).fetchPresets();
-  }
-
-  void _savePresetStudentAssignment(int? value) {
-    if (_studentAssignmentPosition == value) return;
-    _savePreset('studentAssignmentCameraPosition', value);
-    setState(() => _studentAssignmentPosition = value);
-    Provider.of<Camera>(context, listen: false).fetchPresets();
-  }
-
   @override
   void initState() {
     _userProjectorFocusNode = FocusNode(debugLabel: 'userProjectorFocusNode');
@@ -170,14 +129,6 @@ class _SettingsScreenState extends State<SettingsScreen> with PageMixin {
       _passwordCameraTextController.text = _passwordCamera;
       _ipCamera = prefs.getString('ipCamera') ?? '';
       _ipCameraTextController.text = _ipCamera;
-
-      setState(() {
-        _defaultPosition = prefs.getInt('defaultCameraPosition');
-        _speakerPosition = prefs.getInt('speakerCameraPosition');
-        _readerPosition = prefs.getInt('readerCameraPosition');
-        _studentAssignmentPosition =
-            prefs.getInt('studentAssignmentCameraPosition');
-      });
     });
     super.initState();
   }
@@ -219,21 +170,42 @@ class _SettingsScreenState extends State<SettingsScreen> with PageMixin {
       children: [
         Text('Darstellung', style: FluentTheme.of(context).typography.subtitle),
         spacer,
-        ...List.generate(ThemeMode.values.length, (index) {
-          final mode = ThemeMode.values[index];
-          return Padding(
-            padding: const EdgeInsetsDirectional.only(bottom: 8.0),
-            child: RadioButton(
-              checked: appTheme.mode == mode,
-              onChanged: (value) {
-                if (value) {
-                  appTheme.mode = mode;
-                }
-              },
-              content: Text('$mode'.replaceAll('ThemeMode.', '')),
-            ),
-          );
-        }),
+        ListCard(
+          child: Row(
+            children: [
+              const Icon(ms_icons.FluentIcons.dark_theme_20_regular),
+              const SizedBox(width: 10.0),
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Farbschema',
+                    textAlign: TextAlign.start,
+                  ),
+                ],
+              ),
+              Expanded(
+                child: Container(),
+              ),
+              SizedBox(
+                width: 150,
+                child: ComboBox<String>(
+                  value: appTheme.mode.name,
+                  items: List.generate(ThemeMode.values.length, (index) {
+                    final mode = ThemeMode.values[index];
+                    return ComboBoxItem(
+                      key: ValueKey(mode.name),
+                      value: mode.name,
+                      child: Text(mode.name),
+                    );
+                  }),
+                  onChanged: (selectedValue) => appTheme.mode = ThemeMode.values
+                      .firstWhere((element) => selectedValue == element.name),
+                ),
+              ),
+            ],
+          ),
+        ),
         biggerSpacer,
         Text('Geräte', style: FluentTheme.of(context).typography.subtitle),
         spacer,
@@ -348,128 +320,9 @@ class _SettingsScreenState extends State<SettingsScreen> with PageMixin {
             ),
           ),
         ),
-        spacer,
-        ListCard(
-          child: Row(
-            children: [
-              const Icon(ms_icons.FluentIcons.home_24_regular),
-              const SizedBox(width: 10.0),
-              const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Default',
-                    textAlign: TextAlign.start,
-                  ),
-                ],
-              ),
-              Expanded(
-                child: Container(),
-              ),
-              SizedBox(
-                width: 150,
-                child: NumberBox(
-                  mode: SpinButtonPlacementMode.inline,
-                  value: _defaultPosition,
-                  onChanged: _savePresetDefault,
-                  min: 1,
-                  max: 255,
-                ),
-              ),
-            ],
-          ),
-        ),
-        ListCard(
-          child: Row(
-            children: [
-              const Icon(ms_icons.FluentIcons.presenter_24_regular),
-              const SizedBox(width: 10.0),
-              const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Redner',
-                    textAlign: TextAlign.start,
-                  ),
-                ],
-              ),
-              Expanded(
-                child: Container(),
-              ),
-              SizedBox(
-                width: 150,
-                child: NumberBox(
-                  mode: SpinButtonPlacementMode.inline,
-                  value: _speakerPosition,
-                  onChanged: _savePresetSpeaker,
-                  min: 1,
-                  max: 255,
-                ),
-              ),
-            ],
-          ),
-        ),
-        ListCard(
-          child: Row(
-            children: [
-              const Icon(ms_icons.FluentIcons.person_standing_16_regular),
-              const SizedBox(width: 10.0),
-              const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Leser',
-                    textAlign: TextAlign.start,
-                  ),
-                ],
-              ),
-              Expanded(
-                child: Container(),
-              ),
-              SizedBox(
-                width: 150,
-                child: NumberBox(
-                  mode: SpinButtonPlacementMode.inline,
-                  value: _readerPosition,
-                  onChanged: _savePresetReader,
-                  min: 1,
-                  max: 255,
-                ),
-              ),
-            ],
-          ),
-        ),
-        ListCard(
-          child: Row(
-            children: [
-              const Icon(ms_icons.FluentIcons.people_24_regular),
-              const SizedBox(width: 10.0),
-              const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Studierendenaufgabe',
-                    textAlign: TextAlign.start,
-                  ),
-                ],
-              ),
-              Expanded(
-                child: Container(),
-              ),
-              SizedBox(
-                width: 150,
-                child: NumberBox(
-                  mode: SpinButtonPlacementMode.inline,
-                  value: _studentAssignmentPosition,
-                  // focusNode: _ipProjectorFocusNode,
-                  onChanged: _savePresetStudentAssignment,
-                  min: 1,
-                  max: 255,
-                ),
-              ),
-            ],
-          ),
-        ),
+        // *******************************************************
+        biggerSpacer,
+        const CameraPresetList(),
       ],
     );
   }

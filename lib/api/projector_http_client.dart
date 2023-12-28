@@ -40,7 +40,6 @@ class ProjectorHttpClient implements ProjectorApiClient {
   String? getBasicAuthToken(SharedPreferences prefs) {
     String? username = prefs.getString('userProjector');
     String? password = prefs.getString('passwordProjector');
-    print('$username:$password');
     return 'Basic ${base64Encode(utf8.encode('$username:$password'))}';
   }
 

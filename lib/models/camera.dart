@@ -1,13 +1,14 @@
+import 'dart:convert';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart' as ms_icons;
 
 import '../api/camera_api_client.dart';
 
 class Camera extends ChangeNotifier {
   CameraApiClient apiClient = CameraApiClient.http();
   List<Preset> _presets = [];
-  PresetId _currentPresetId = PresetId.none;
+  String _currentPresetId = '';
 
   Camera() {
     fetchPresets();
@@ -18,100 +19,105 @@ class Camera extends ChangeNotifier {
   }
 
   void fetchPresets() async {
-    List<Preset> presets = [];
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    int? position = prefs.getInt('defaultCameraPosition');
-    if (position != null && position > 0) {
-      presets.add(
-        Preset(
-          PresetId.defaultCameraPosition,
-          'Standard',
-          position,
-          const Icon(ms_icons.FluentIcons.home_24_regular),
-        ),
-      );
-    }
-    position = null;
 
-    position = prefs.getInt('speakerCameraPosition');
-    if (position != null && position > 0) {
-      presets.add(
-        Preset(
-          PresetId.speakerCameraPosition,
-          'Redner',
-          position,
-          const Icon(ms_icons.FluentIcons.presenter_24_regular),
-        ),
-      );
-    }
-    position = null;
-
-    position = prefs.getInt('readerCameraPosition');
-    if (position != null && position > 0) {
-      presets.add(
-        Preset(
-          PresetId.readerCameraPosition,
-          'Leser',
-          position,
-          const Icon(ms_icons.FluentIcons.person_standing_16_regular),
-        ),
-      );
-    }
-    position = null;
-
-    position = prefs.getInt('studentAssignmentCameraPosition');
-    if (position != null && position > 0) {
-      presets.add(
-        Preset(
-          PresetId.studentAssignmentCameraPosition,
-          'Studierendenaufgabe',
-          position,
-          const Icon(ms_icons.FluentIcons.people_24_regular),
-        ),
-      );
-    }
-
+    var jsonPresets = prefs.getString('cameraPresets');
+    var presets = (jsonDecode(jsonPresets!) as List)
+        .map((e) => Preset.fromJson(e))
+        .toList();
     _presets = presets;
     notifyListeners();
   }
 
-  void gotoPresetId(PresetId presetId) {
+  void addPreset(String name, Icon icon, int position) {
+    _presets.add(
+      Preset(
+        id: DateTime.now().toString(),
+        name: name,
+        icon: icon,
+        position: position,
+      ),
+    );
+    notifyListeners();
+  }
+
+  void deletePreset(String id) {
+    var presetToRemoveIndex =
+        _presets.indexWhere((element) => element.id == id);
+
+    if (_presets[presetToRemoveIndex].isStandard == true) {
+      throw Exception('Standardeinträge können nicht gelöscht werden.');
+    }
+    _presets.removeAt(presetToRemoveIndex);
+    notifyListeners();
+  }
+
+  void changePreset(String id, String name, Icon? icon, int? position) {
+    var presetToChange = _presets.firstWhere((element) => element.id == id);
+
+    presetToChange.name = name;
+    presetToChange.icon = icon;
+    presetToChange.position = position;
+    persistPresets();
+    notifyListeners();
+  }
+
+  void persistPresets() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var jsonPresets = jsonEncode(_presets);
+    prefs.setString('cameraPresets', jsonPresets);
+  }
+
+  void gotoPresetId(String presetId) {
     var preset = _presets.firstWhere((element) => element.id == presetId);
-    apiClient.gotoPreset(preset.position);
+    apiClient.gotoPreset(preset.position!);
     _currentPresetId = preset.id;
     notifyListeners();
   }
 
   List<Preset> get presets => _presets;
 
-  PresetId get currentPresetId => _currentPresetId;
+  String get currentPresetId => _currentPresetId;
 }
 
 class Preset {
-  final PresetId _id;
-  final String _title;
-  final int _position;
-  final Icon icon;
+  final String id;
+  String name;
+  Icon? icon;
+  int? position;
+  final bool isStandard;
 
-  Preset(
-    this._id,
-    this._title,
-    this._position, [
-    this.icon = const Icon(ms_icons.FluentIcons.frame_16_regular),
-  ]);
+  Preset({
+    required this.id,
+    required this.name,
+    required this.icon,
+    required this.position,
+    this.isStandard = false,
+  });
 
-  PresetId get id => _id;
+  factory Preset.fromJson(Map<String, dynamic> json) {
+    var codePoint = int.parse(json['icon']);
+    var icon = Icon(IconData(
+      codePoint,
+      fontFamily: 'FluentSystemIcons-Regular',
+      fontPackage: 'fluentui_system_icons',
+    ));
 
-  String get title => _title;
+    return Preset(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      icon: icon,
+      position: json['position'] as int,
+      isStandard: json['isStandard'] as bool,
+    );
+  }
 
-  int get position => _position;
-}
-
-enum PresetId {
-  none,
-  defaultCameraPosition,
-  speakerCameraPosition,
-  readerCameraPosition,
-  studentAssignmentCameraPosition
+  Map toJson() => {
+        'id': id,
+        'name': name,
+        'icon': icon?.icon?.codePoint.toString(),
+        'position': position,
+        'isStandard': isStandard,
+      };
 }
