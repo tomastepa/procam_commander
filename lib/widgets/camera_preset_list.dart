@@ -53,7 +53,7 @@ class _CameraPresetListState extends State<CameraPresetList> {
               wrappedItem: CommandBarButton(
                 icon: const Icon(FluentIcons.add),
                 label: const Text('Neu'),
-                onPressed: () {},
+                onPressed: () => addPreset(),
               ),
             ),
             CommandBarBuilderItem(
@@ -64,11 +64,8 @@ class _CameraPresetListState extends State<CameraPresetList> {
               wrappedItem: CommandBarButton(
                 icon: const Icon(FluentIcons.edit),
                 label: const Text('Bearbeiten'),
-                onPressed: selectedPresetId == null
-                    ? null
-                    : () {
-                        showPresetDialog(context);
-                      },
+                onPressed:
+                    selectedPresetId == null ? null : () => changePreset(),
               ),
             ),
             CommandBarBuilderItem(
@@ -93,32 +90,44 @@ class _CameraPresetListState extends State<CameraPresetList> {
 
     return ListView.builder(
         itemBuilder: (ctx, index) {
-          final singlePresetItem = camera.presets[index];
+          final preset = camera.presets[index];
           return ListTile.selectable(
-            title: Text(singlePresetItem.name),
-            key: ValueKey(
-                singlePresetItem.id), //wird hier eigentlich nicht benötigt
-            leading: singlePresetItem.icon,
-            selected: selectedPresetId == singlePresetItem.id,
+            title: Text(preset.name),
+            trailing: Text(
+              preset.position != null ? preset.position.toString() : '',
+              style: FluentTheme.of(context)
+                  .typography
+                  .body!
+                  .copyWith(fontWeight: FontWeight.w500),
+            ),
+            key: ValueKey(preset.id), //wird hier eigentlich nicht benötigt
+            leading: preset.icon,
+            selected: selectedPresetId == preset.id,
             onPressed: () {
-              selectedPresetId == singlePresetItem.id
+              selectedPresetId == preset.id
                   ? setState(() => selectedPresetId = null)
-                  : setState(() => selectedPresetId = singlePresetItem.id);
+                  : setState(() => selectedPresetId = preset.id);
             },
           );
         },
         itemCount: camera.presets.length);
   }
 
-  void createPreset() {}
+  void addPreset() {
+    selectedPresetId = null;
+    showPresetDialog();
+  }
 
-  void changePreset() {}
+  void changePreset() {
+    showPresetDialog();
+  }
 
   void removePreset() {
     var camera = Provider.of<Camera>(context, listen: false);
 
     try {
       camera.deletePreset(selectedPresetId!);
+      selectedPresetId = null;
     } catch (e) {
       showErrorInfoBar(e.toString());
     }
@@ -158,14 +167,24 @@ class _CameraPresetListState extends State<CameraPresetList> {
     );
   }
 
-  void showPresetDialog(BuildContext context, [String? presetId]) async {
+  void showPresetDialog() async {
     TextEditingController presetNameTextController = TextEditingController();
 
     var camera = Provider.of<Camera>(context, listen: false);
+    Preset? preset;
+    String presetName;
+    int? presetPosition;
 
-    var presetItem =
-        camera.presets.firstWhere((element) => selectedPresetId == element.id);
-    presetNameTextController.text = presetItem.name;
+    if (selectedPresetId != null) {
+      preset = camera.presets
+          .firstWhere((element) => selectedPresetId == element.id);
+      presetName = preset.name;
+      presetPosition = preset.position;
+    } else {
+      presetName = '';
+    }
+
+    presetNameTextController.text = presetName;
 
     await showDialog(
       context: context,
@@ -188,8 +207,8 @@ class _CameraPresetListState extends State<CameraPresetList> {
                   label: 'Positionsnummer',
                   child: NumberBox(
                     mode: SpinButtonPlacementMode.inline,
-                    value: presetItem.position,
-                    onChanged: (i) => presetItem.position = i,
+                    value: presetPosition,
+                    onChanged: (i) => presetPosition = i,
                     min: 1,
                     max: 255,
                   ),
@@ -203,8 +222,15 @@ class _CameraPresetListState extends State<CameraPresetList> {
             child: const Text('Speichern'),
             onPressed: () {
               Navigator.pop(context);
-              camera.changePreset(presetItem.id, presetNameTextController.text,
-                  presetItem.icon, presetItem.position);
+              if (preset == null) {
+                camera.addPreset(
+                    presetNameTextController.text,
+                    const Icon(ms_icons.FluentIcons.diamond_24_regular),
+                    presetPosition);
+              } else {
+                camera.changePreset(preset!.id, presetNameTextController.text,
+                    preset.icon, presetPosition);
+              }
             },
           ),
           Button(

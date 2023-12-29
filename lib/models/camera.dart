@@ -29,7 +29,7 @@ class Camera extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addPreset(String name, Icon icon, int position) {
+  void addPreset(String name, Icon? icon, int? position) {
     _presets.add(
       Preset(
         id: DateTime.now().toString(),
@@ -97,18 +97,22 @@ class Preset {
   });
 
   factory Preset.fromJson(Map<String, dynamic> json) {
-    var codePoint = int.parse(json['icon']);
-    var icon = Icon(IconData(
-      codePoint,
-      fontFamily: 'FluentSystemIcons-Regular',
-      fontPackage: 'fluentui_system_icons',
-    ));
+    Icon? icon;
+
+    if (json['icon'] != null) {
+      var codePoint = int.parse(json['icon']);
+      icon = Icon(IconData(
+        codePoint,
+        fontFamily: 'FluentSystemIcons-Regular',
+        fontPackage: 'fluentui_system_icons',
+      ));
+    }
 
     return Preset(
       id: json['id'] as String,
       name: json['name'] as String,
       icon: icon,
-      position: json['position'] as int,
+      position: json['position'] as int?,
       isStandard: json['isStandard'] as bool,
     );
   }
