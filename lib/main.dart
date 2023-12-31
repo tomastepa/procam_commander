@@ -1,5 +1,9 @@
 // import 'dart:html';
 
+import 'package:procam_commander/screens/appearance_settings_screen.dart';
+import 'package:procam_commander/screens/camera_settings_screen.dart';
+import 'package:procam_commander/screens/projector_settings_screen.dart';
+
 import './models/projector.dart';
 import './models/camera.dart';
 
@@ -215,7 +219,10 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   }
 
   int _calculateSelectedIndex(BuildContext context) {
-    final location = GoRouterState.of(context).uri.toString();
+    var location = GoRouterState.of(context).uri.toString();
+    // only get the first part of the route and ignore sub routes
+    location = location.split('/').take(2).join('/');
+
     int indexOriginal = originalItems
         .where((element) => element.key != null)
         .toList()
@@ -473,6 +480,45 @@ final router = GoRouter(
           path: '/settings',
           // name: 'settings',
           builder: (context, state) => const SettingsScreen(),
+          routes: [
+            /// Appearance Settings
+            GoRoute(
+              path: 'appearance',
+              builder: (context, state) => const AppearanceSettingsScreen(),
+              // pageBuilder: (context, state) {
+              //   return CustomTransitionPage<void>(
+              //     key: state.pageKey,
+              //     child: const AppearanceSettingsScreen(),
+              //     transitionsBuilder:
+              //         (context, animation, secondaryAnimation, child) {
+              //       const begin = Offset(1.0, 0.0);
+              //       const end = Offset.zero;
+              //       const curve = Curves.ease;
+
+              //       var tween = Tween(begin: begin, end: end)
+              //           .chain(CurveTween(curve: curve));
+
+              //       return SlideTransition(
+              //         position: animation.drive(tween),
+              //         child: child,
+              //       );
+              //     },
+              //   );
+              // },
+            ),
+
+            /// Projector Settings
+            GoRoute(
+              path: 'projector',
+              builder: (context, state) => const ProjectorSettingsScreen(),
+            ),
+
+            /// Camera Settings
+            GoRoute(
+              path: 'camera',
+              builder: (context, state) => const CameraSettingsScreen(),
+            ),
+          ],
         ),
       ],
     ),

@@ -18,21 +18,21 @@ class _CameraPresetListState extends State<CameraPresetList> {
   Widget emtpyListPlaceholder = LayoutBuilder(
     builder: ((context, constraints) {
       return Center(
-        child: Column(
-          children: [
-            SizedBox(
-              height: constraints.maxHeight * 0.6,
-              child: const Icon(
+        child: SizedBox(
+          height: 170,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              const Icon(
                 ms_icons.FluentIcons.apps_list_20_regular,
                 size: 70,
               ),
-            ),
-            const SizedBox(height: 15),
-            Text(
-              '(Es wurden noch keine Positionen konfiguriert)',
-              style: FluentTheme.of(context).typography.bodyLarge,
-            ),
-          ],
+              Text(
+                '(Es wurden noch keine Positionen konfiguriert)',
+                style: FluentTheme.of(context).typography.bodyLarge,
+              ),
+            ],
+          ),
         ),
       );
     }),
@@ -89,28 +89,31 @@ class _CameraPresetListState extends State<CameraPresetList> {
     var camera = Provider.of<Camera>(context, listen: false);
 
     return ListView.builder(
-        itemBuilder: (ctx, index) {
-          final preset = camera.presets[index];
-          return ListTile.selectable(
-            title: Text(preset.name),
-            trailing: Text(
-              preset.position != null ? preset.position.toString() : '',
-              style: FluentTheme.of(context)
-                  .typography
-                  .body!
-                  .copyWith(fontWeight: FontWeight.w500),
-            ),
-            key: ValueKey(preset.id), //wird hier eigentlich nicht benötigt
-            leading: preset.icon,
-            selected: selectedPresetId == preset.id,
-            onPressed: () {
-              selectedPresetId == preset.id
-                  ? setState(() => selectedPresetId = null)
-                  : setState(() => selectedPresetId = preset.id);
-            },
-          );
-        },
-        itemCount: camera.presets.length);
+      itemBuilder: (ctx, index) {
+        final preset = camera.presets[index];
+        return ListTile.selectable(
+          title: Text(preset.name),
+          trailing: Text(
+            preset.position != null ? preset.position.toString() : '',
+            style: FluentTheme.of(context)
+                .typography
+                .body!
+                .copyWith(fontWeight: FontWeight.w500),
+          ),
+          key: ValueKey(preset.id), //wird hier eigentlich nicht benötigt
+          leading: preset.icon,
+          selected: selectedPresetId == preset.id,
+          onPressed: () {
+            selectedPresetId == preset.id
+                ? setState(() => selectedPresetId = null)
+                : setState(() => selectedPresetId = preset.id);
+          },
+        );
+      },
+      itemCount: camera.presets.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+    );
   }
 
   void addPreset() {
@@ -158,10 +161,7 @@ class _CameraPresetListState extends State<CameraPresetList> {
       children: [
         presetCommandBar,
         ListCard(
-          child: SizedBox(
-            height: 200,
-            child: camera.presets.isEmpty ? emtpyListPlaceholder : presetList,
-          ),
+          child: camera.presets.isEmpty ? emtpyListPlaceholder : presetList,
         ),
       ],
     );
@@ -228,7 +228,7 @@ class _CameraPresetListState extends State<CameraPresetList> {
                     const Icon(ms_icons.FluentIcons.diamond_24_regular),
                     presetPosition);
               } else {
-                camera.changePreset(preset!.id, presetNameTextController.text,
+                camera.changePreset(preset.id, presetNameTextController.text,
                     preset.icon, presetPosition);
               }
             },
