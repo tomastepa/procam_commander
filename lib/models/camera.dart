@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:flutter/foundation.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,6 +22,10 @@ class Camera extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     var jsonPresets = prefs.getString('cameraPresets');
+    if (jsonPresets == null) {
+      if (kDebugMode) print('cameraPresets is null');
+      return;
+    }
     var presets = (jsonDecode(jsonPresets!) as List)
         .map((e) => Preset.fromJson(e))
         .toList();
@@ -38,6 +42,7 @@ class Camera extends ChangeNotifier {
         position: position,
       ),
     );
+    persistPresets();
     notifyListeners();
   }
 
@@ -49,6 +54,7 @@ class Camera extends ChangeNotifier {
       throw Exception('Standardeinträge können nicht gelöscht werden.');
     }
     _presets.removeAt(presetToRemoveIndex);
+    persistPresets();
     notifyListeners();
   }
 

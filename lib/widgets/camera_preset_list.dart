@@ -172,7 +172,7 @@ class _CameraPresetListState extends State<CameraPresetList> {
 
     var camera = Provider.of<Camera>(context, listen: false);
     Preset? preset;
-    String presetName;
+    String? presetName;
     int? presetPosition;
 
     if (selectedPresetId != null) {
@@ -180,11 +180,9 @@ class _CameraPresetListState extends State<CameraPresetList> {
           .firstWhere((element) => selectedPresetId == element.id);
       presetName = preset.name;
       presetPosition = preset.position;
-    } else {
-      presetName = '';
     }
 
-    presetNameTextController.text = presetName;
+    presetNameTextController.text = presetName ?? '';
 
     await showDialog(
       context: context,
