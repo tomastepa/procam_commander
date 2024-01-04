@@ -19,18 +19,6 @@ Simple and intuitive interface: The program offers an easy-to-use interface for 
 Projector: Make sure your projector is compatible with the program. Check the documentation or specifications of your projector model for compatibility details.
 Camera: Ensure that your camera is supported by the program. Refer to the camera's documentation or specifications to verify compatibility.
 
-## Usage
-
-1. Clone the repository: `git clone https://github.com/your-username/projector-camera-control.git`
-1. Install the required dependencies: `npm install`
-1. Connect your projector and camera to the computer.
-1. Run the program: `npm start`
-1. Follow the on-screen instructions to control the projector and camera.
-
-## Contributing
-
-Contributions to this project are currently not accepted. However, you are welcome to fork the repository and modify the code for your specific needs.
-
 ## License
 
 This program is released under the MIT License. Please review the license file for more details.
