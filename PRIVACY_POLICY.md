@@ -13,4 +13,4 @@ This App does not use cookies or any similar tracking technologies.
 ## 4. CHANGES TO THIS PRIVACY POLICY
 I reserve the right to update or modify this Privacy Policy at any time without prior notice. Any changes will be effective immediately upon posting the updated Privacy Policy on the App. Your continued use of the App after any modifications to the Privacy Policy constitutes acceptance of those changes.
 
-Copyright (c) 2024 Tobias Pastrzig
+Copyright (c) 2024 tomastepa
