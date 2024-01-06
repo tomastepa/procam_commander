@@ -1,17 +1,3 @@
-// import 'dart:html';
-
-import 'package:procam_commander/screens/appearance_settings_screen.dart';
-import 'package:procam_commander/screens/camera_settings_screen.dart';
-import 'package:procam_commander/screens/projector_settings_screen.dart';
-
-import './models/projector.dart';
-import './models/camera.dart';
-
-import 'screens/home_screen.dart';
-import 'screens/projector_screen.dart';
-import 'screens/camera_screen.dart';
-import 'screens/settings_screen.dart';
-
 import 'package:fluent_ui/fluent_ui.dart' hide Page;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
@@ -22,9 +8,18 @@ import 'package:url_launcher/link.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart' as ms_icons;
 
-// import 'routes/devices.dart' deferred as devices;
 import 'theme.dart';
-// import 'widgets/deferred_widget.dart';
+
+import './models/projector.dart';
+import './models/camera.dart';
+
+import 'screens/home_screen.dart';
+import 'screens/projector_screen.dart';
+import 'screens/camera_screen.dart';
+import 'screens/settings_screen.dart';
+import './screens/appearance_settings_screen.dart';
+import './screens/camera_settings_screen.dart';
+import './screens/projector_settings_screen.dart';
 
 const String appTitle = 'ProCam Commander';
 

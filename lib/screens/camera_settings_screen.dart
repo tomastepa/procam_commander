@@ -1,6 +1,6 @@
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart' as ms_icons;
+import 'package:fluent_ui/fluent_ui.dart' hide FluentIcons;
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -119,7 +119,7 @@ class _CameraSettingsScreenState extends State<CameraSettingsScreen> {
         ListCard(
           child: Row(
             children: [
-              const Icon(ms_icons.FluentIcons.password_24_regular),
+              const Icon(FluentIcons.password_24_regular),
               const SizedBox(width: 10.0),
               const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

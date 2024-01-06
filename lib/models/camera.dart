@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:fluent_ui/fluent_ui.dart' hide FluentIcons;
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/camera_api_client.dart';
@@ -10,8 +11,45 @@ class Camera extends ChangeNotifier {
   List<Preset> _presets = [];
   String _currentPresetId = '';
 
+  final List<Preset> _defaultPresets = [
+    Preset(
+      id: '1',
+      name: 'Default',
+      icon: const Icon(FluentIcons.home_24_regular),
+      position: null,
+      isStandard: true,
+    ),
+    Preset(
+      id: '2',
+      name: 'Redner',
+      icon: const Icon(FluentIcons.presenter_24_regular),
+      position: null,
+      isStandard: true,
+    ),
+    Preset(
+      id: '3',
+      name: 'Leser',
+      icon: const Icon(FluentIcons.person_standing_16_filled),
+      position: null,
+      isStandard: true,
+    ),
+    Preset(
+      id: '4',
+      name: 'Studierendenaufgabe',
+      icon: const Icon(FluentIcons.people_24_regular),
+      position: null,
+      isStandard: true,
+    ),
+  ];
+
   Camera() {
     fetchPresets();
+  }
+
+  void initPresets() {
+    _presets = _defaultPresets;
+    persistPresets();
+    notifyListeners();
   }
 
   void onSettingsChanged() {

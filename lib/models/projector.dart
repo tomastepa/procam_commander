@@ -3,7 +3,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import '../api/projector_api_client.dart';
 
 class Projector extends ChangeNotifier {
-  late ProjectorApiClient _apiClient = ProjectorApiClient.http();
+  ProjectorApiClient _apiClient = ProjectorApiClient.http();
   bool _isPowerOn = false;
   bool _isAvMuteOn = false;
 
