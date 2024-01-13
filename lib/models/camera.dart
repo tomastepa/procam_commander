@@ -64,7 +64,7 @@ class Camera extends ChangeNotifier {
       if (kDebugMode) print('cameraPresets is null');
       return;
     }
-    var presets = (jsonDecode(jsonPresets!) as List)
+    var presets = (jsonDecode(jsonPresets) as List)
         .map((e) => Preset.fromJson(e))
         .toList();
     _presets = presets;
