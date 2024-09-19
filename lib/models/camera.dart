@@ -61,7 +61,8 @@ class Camera extends ChangeNotifier {
 
     var jsonPresets = prefs.getString('cameraPresets');
     if (jsonPresets == null) {
-      if (kDebugMode) print('cameraPresets is null');
+      if (kDebugMode) print('cameraPresets is null, initiating presets ...');
+      initPresets();
       return;
     }
     var presets = (jsonDecode(jsonPresets) as List)
