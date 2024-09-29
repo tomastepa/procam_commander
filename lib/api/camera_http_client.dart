@@ -17,7 +17,10 @@ class CameraHttpClient implements CameraApiClient {
 
   void init() async {
     // read IP address from settings
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final SharedPreferencesWithCache prefs =
+        await SharedPreferencesWithCache.create(
+      cacheOptions: const SharedPreferencesWithCacheOptions(),
+    );
 
     _basicAuthToken = getBasicAuthToken(prefs);
     _ipAddress = getIpAddress(prefs);
@@ -26,7 +29,7 @@ class CameraHttpClient implements CameraApiClient {
     }
   }
 
-  String getIpAddress(SharedPreferences prefs) {
+  String getIpAddress(SharedPreferencesWithCache prefs) {
     String? ipAddress = prefs.getString('ipCamera');
     if (ipAddress == null || ipAddress.isEmpty) {
       throw MissingParameterException(
@@ -35,7 +38,7 @@ class CameraHttpClient implements CameraApiClient {
     return ipAddress;
   }
 
-  String getBasicAuthToken(SharedPreferences prefs) {
+  String getBasicAuthToken(SharedPreferencesWithCache prefs) {
     String? username = prefs.getString('userCamera');
     String? password = prefs.getString('passwordCamera');
     return 'Basic ${base64Encode(utf8.encode('$username:$password'))}';

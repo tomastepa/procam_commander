@@ -32,12 +32,18 @@ class AppTheme extends ChangeNotifier {
   }
 
   void persistMode(ThemeMode mode) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final SharedPreferencesWithCache prefs =
+        await SharedPreferencesWithCache.create(
+      cacheOptions: const SharedPreferencesWithCacheOptions(),
+    );
     prefs.setString('themeMode', mode.name);
   }
 
   Future<ThemeMode> fetchMode() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final SharedPreferencesWithCache prefs =
+        await SharedPreferencesWithCache.create(
+      cacheOptions: const SharedPreferencesWithCacheOptions(),
+    );
     String? mode = prefs.getString('themeMode');
     if (mode == null) {
       return ThemeMode.system;

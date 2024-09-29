@@ -24,7 +24,10 @@ class _CameraSettingsScreenState extends State<CameraSettingsScreen> {
     const BreadcrumbItem(label: Text('Kamera'), value: 1),
   ];
 
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  final Future<SharedPreferencesWithCache> _prefs =
+      SharedPreferencesWithCache.create(
+    cacheOptions: const SharedPreferencesWithCacheOptions(),
+  );
 
   final TextEditingController _ipCameraTextController = TextEditingController();
   final TextEditingController _userCameraTextController =
@@ -41,7 +44,10 @@ class _CameraSettingsScreenState extends State<CameraSettingsScreen> {
   String _ipCamera = '';
 
   void _saveValue(String key, String value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final SharedPreferencesWithCache prefs =
+        await SharedPreferencesWithCache.create(
+      cacheOptions: const SharedPreferencesWithCacheOptions(),
+    );
     prefs.setString(key, value);
   }
 
@@ -76,7 +82,7 @@ class _CameraSettingsScreenState extends State<CameraSettingsScreen> {
     _userCameraFocusNode.addListener(_saveCredentialsCamera);
     _passwordCameraFocusNode.addListener(_saveCredentialsCamera);
 
-    _prefs.then((SharedPreferences prefs) {
+    _prefs.then((SharedPreferencesWithCache prefs) {
       _userCamera = prefs.getString('userCamera') ?? '';
       _userCameraTextController.text = _userCamera;
       _passwordCamera = prefs.getString('passwordCamera') ?? '';

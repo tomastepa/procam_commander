@@ -18,7 +18,10 @@ class ProjectorHttpClient implements ProjectorApiClient {
 
   init() async {
     // read IP address from settings
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final SharedPreferencesWithCache prefs =
+        await SharedPreferencesWithCache.create(
+      cacheOptions: const SharedPreferencesWithCacheOptions(),
+    );
 
     _basicAuthToken = getBasicAuthToken(prefs);
     _ipAddress = getIpAddress(prefs);
@@ -27,7 +30,7 @@ class ProjectorHttpClient implements ProjectorApiClient {
     }
   }
 
-  String? getIpAddress(SharedPreferences prefs) {
+  String? getIpAddress(SharedPreferencesWithCache prefs) {
     String? ipAddress = prefs.getString('ipProjector');
     // if (ipAddress == null || ipAddress.isEmpty) {
     //   throw MissingParameterException(
@@ -36,7 +39,7 @@ class ProjectorHttpClient implements ProjectorApiClient {
     return ipAddress;
   }
 
-  String? getBasicAuthToken(SharedPreferences prefs) {
+  String? getBasicAuthToken(SharedPreferencesWithCache prefs) {
     String? username = prefs.getString('userProjector');
     String? password = prefs.getString('passwordProjector');
     return 'Basic ${base64Encode(utf8.encode('$username:$password'))}';

@@ -57,7 +57,10 @@ class Camera extends ChangeNotifier {
   }
 
   void fetchPresets() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final SharedPreferencesWithCache prefs =
+        await SharedPreferencesWithCache.create(
+      cacheOptions: const SharedPreferencesWithCacheOptions(),
+    );
 
     var jsonPresets = prefs.getString('cameraPresets');
     if (jsonPresets == null) {
@@ -108,7 +111,10 @@ class Camera extends ChangeNotifier {
   }
 
   void persistPresets() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final SharedPreferencesWithCache prefs =
+        await SharedPreferencesWithCache.create(
+      cacheOptions: const SharedPreferencesWithCacheOptions(),
+    );
 
     var jsonPresets = jsonEncode(_presets);
     prefs.setString('cameraPresets', jsonPresets);

@@ -24,7 +24,10 @@ class _ProjectorSettingsScreenState extends State<ProjectorSettingsScreen> {
     const BreadcrumbItem(label: Text('Beamer'), value: 1),
   ];
 
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  final Future<SharedPreferencesWithCache> _prefs =
+      SharedPreferencesWithCache.create(
+    cacheOptions: const SharedPreferencesWithCacheOptions(),
+  );
 
   final TextEditingController _userProjectorTextController =
       TextEditingController();
@@ -42,7 +45,10 @@ class _ProjectorSettingsScreenState extends State<ProjectorSettingsScreen> {
   String _ipProjector = '';
 
   void _saveValue(String key, String value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final SharedPreferencesWithCache prefs =
+        await SharedPreferencesWithCache.create(
+      cacheOptions: const SharedPreferencesWithCacheOptions(),
+    );
     prefs.setString(key, value);
   }
 
@@ -78,7 +84,7 @@ class _ProjectorSettingsScreenState extends State<ProjectorSettingsScreen> {
     _passwordProjectorFocusNode.addListener(_saveCredentialsProjector);
     _ipProjectorFocusNode.addListener(_saveIpProjector);
 
-    _prefs.then((SharedPreferences prefs) {
+    _prefs.then((SharedPreferencesWithCache prefs) {
       _userProjector = prefs.getString('userProjector') ?? '';
       _userProjectorTextController.text = _userProjector;
       _passwordProjector = prefs.getString('passwordProjector') ?? '';
